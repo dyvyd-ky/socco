@@ -1,0 +1,80 @@
+{%  extends 'core/base.html'  %}
+
+
+{% block content %}
+
+  
+            
+            
+                <div class="container shadow py-3">
+                    
+                    <div class="card-body shadow">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% if product.image %}
+                                <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-5">    
+                                    <h3 class="font-weight-light">{{ product.title }}</h3>
+                                    <h6 class="text-black">
+                                        KShs {{ product.price }}                                  
+                                    </h6>    
+                                    
+                                    <p class="mt-2"><strong>Description: </strong> {{ product.description | safe}}</p>   
+                                   
+                                    <form method="post" action=".">
+                                        {% csrf_token %}
+                
+                                        <div class="field my-3">        
+                                            <input type="number" name="quantity" value="1" class="control input form-control-xxxx" min="1">
+                                            <button class="control btn btn-outline-info">Add to Basket</button>
+                                        </div>
+                                    </form>     
+                                    <a href="{% url 'cart' %}" class="btn btn-info">BASKET{% if cart %} ({{ cart|length }}){% endif %}</a>                            
+                            </div> 
+                            <div class="col-md-3">
+                                <div class="card card-body bg-light">
+                                    <a href="{% url 'vendor' product.vendor.id %}"> 
+                                                    
+                                        <img class="img-fluid rounded profile" src="{{product.vendor.profile_pic.url}}">
+                                        <h6 class="font-weight-bold float-right mt-3">{{ product.vendor.business_name }}'s Store <br>
+                                        View Here </h6>
+
+                                     
+                                    </a>
+                                    <hr>
+                                    <p><i class="fa fa-instagram mr-2"></i><a href="{{ vendor.instagram_url }}" target="_blank" rel="noreferrer noopener">Instagram</a></p>
+                                    <p><i class="fa fa-twitter mr-2"></i><a href="{{ vendor.twitter_url }}" target="_blank" rel="noreferrer noopener">Twitter</a></p>
+                            
+                                </div>   
+                            </div>     
+                        </div>
+                    </div>  
+                  
+
+                    {% if similar_products %}
+                        <hr>
+                        <div class="col-md-12 navbar-light py-3">
+                            <h3>Similar Items</h3>
+                        </div>
+                        <div class="flex-container">
+                            {% for product in similar_products %}
+                                {% include 'product/parts/list_item.html' %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+        
+
+
+{% endblock content %}
+
+
+
+
+
+    
+

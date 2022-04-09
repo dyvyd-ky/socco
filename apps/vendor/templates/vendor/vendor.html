@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ vendor.name }} | {% endblock %}
+
+{% block content %}
+<div class="container shadow py-3">
+            <div class="flex-container shadow py-3">  
+                <div class='col-md-3'>
+                    <img class="img-fluid rounded mr-2" src="{{ vendor.profile_pic.url }}">  
+                </div>
+                <div class='col-md-8'>
+                    <h4 class='font-weight-bold'>{{ vendor.business_name }}</h4>   
+                    <p class="mt-3">{{ vendor.about }}</p>
+                    <p><i class="fa fa-instagram mr-2"></i><a href="{{ vendor.instagram_url }}" target="_blank" rel="noreferrer noopener">Instagram</a></p>   
+                    <p><i class="fa fa-twitter mr-2"></i><a href="{{ vendor.twitter_url }}" target="_blank" rel="noreferrer noopener">Twitter</a></p>   
+                </div>
+                                                                          
+            </div>  
+            <br>  
+            <hr> 
+    <div class="flex-container">                     
+        {% for product in vendor.products.all %}
+            {% include 'product/parts/list_item.html' %}
+        {% endfor %}
+    </div>
+ 
+</div>
+{% endblock %}

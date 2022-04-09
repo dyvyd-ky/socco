@@ -1,0 +1,109 @@
+{% extends 'core/base.html' %}
+
+
+
+{% block content %}
+<div class="container shadow py-3">
+    <div class="container card py-3"> 
+        <span>     
+            <h4>Admin:-  {{ vendor.business_name }}
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger float-right ml-2">Log out</a>
+                <a href="{% url 'edit_vendor'%}" class="btn btn-outline-info float-right">Edit</a>
+                
+            </h4>
+        <span/>
+        <span><strong>My balance: </strong>KShs {{ vendor.get_balance }}</span><br>
+        <span><strong>Paid amount: </strong>KShs {{ vendor.get_paid_amount }}</span>
+
+        
+              
+    </div>
+ 
+    <div class="container card py-3 mt-3">
+        <h4>My products
+            <a href="{% url 'add_product' %}" class="btn btn-outline-info float-right">Add product</a>
+        </h4>        
+        {% if products %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>
+                                <img class="cart-image" src="{{ product.get_thumbnail }}">
+                            </td>
+                            <td><a href="{% url 'product' product.category.slug product.slug %}">{{ product.title }}</a></td>
+                            <td>KShs {{ product.price }}</td>
+                            <td><a href="{% url 'edit_product' product.id %}">Edit</a></td>
+                            <td><a class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'delete' product.slug %}">Delete</a></td>
+                            
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You don't have any products yet...</p>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <h4>My orders</h4>
+    
+        {% if orders %}
+            {% for order in orders %}
+                <div class="{% if order.fully_paid %}bg-info-light{% else %}bg-info-light{% endif %} mb-2 p-4">
+                    <div class="columns is-multiline">
+                        <div class="column is-6">
+                            <h3 class="is-size-4">#{{ order.id }} - {{ order.first_name }} {{ order.last_name }}</h3>
+                        </div>
+    
+                        <div class="column is-12">
+                            <b>Name:</b> {{ order.first_name }} {{ order.last_name }}<br>
+                            <b>Location:</b> {{ order.location }}<br>
+                            <b>E-mail:</b> {{ order.email }}<br>
+                            <b>Phone:</b> {{ order.phone }}
+    
+                            <table class="table is-fullwidth mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Paid</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+    
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                        {% if item.vendor == request.user.vendor %}
+                                            <tr>
+                                                <td>{{ item.product.title }}</td>
+                                                <td>KShs {{ item.product.price }}</td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td>{{ item.vendor_paid|yesno:"Yes,No" }}</td>
+                                                <td>KShs {{ item.get_total_price }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

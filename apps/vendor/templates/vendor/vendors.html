@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+
+
+
+{% block content %}
+<div class="container">
+  <div class="col-md-6 mt-3">
+      <div class="card-body shadow">
+        <h4 class="font-weight-bold">VENDORS</h4>
+        <p class='text-muted'>Vendor info& items;</p>
+          {% for vendor in vendors %}
+          <ul class="list-group">
+            <li class="list-group list-group-item">
+              <strong>
+                  
+                  <a href="{% url 'vendor' vendor.id %}"> {{ vendor.business_name }}</a>
+                  <a class="btn btn-outline-info float-right" href="{% url 'vendor' vendor.id %}"> View</a>
+
+              </strong>
+            </li>
+          </ul>
+          {% endfor %}
+        </p>
+      </div>
+  </div>
+</div>
+{% endblock %}

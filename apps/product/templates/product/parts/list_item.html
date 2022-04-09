@@ -1,0 +1,19 @@
+    <div class="col-md-3 my-3">
+        <div class="card h-100 shadow">
+        <img src="{{ product.get_thumbnail }}" class="img-fluid thumbnail">
+    
+            <div class="card-body small">                        
+                <h5>
+                    <a href="{% url 'product' product.category.slug product.slug %}"> {{ product.title }}</a></h5>
+                    
+                    <h6 class="font-weight-light">
+                        KShs {{ product.price }}
+                    </h6> 
+                    
+                    
+                <hr>
+                <a class="badge badge-info" href="{% url 'vendor' product.vendor.id %}">{{ product.vendor.business_name }}</a>
+                <a class="btn btn-outline-info float-right" href="{% url 'product' product.category.slug product.slug %}">View</a>     
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Search | {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="py-3">
+            <h3>Search: "{{ query }}"</h3>
+        </div>
+            {% for product in products %}
+                {% include 'product/parts/list_item.html' %}
+            {% endfor %}
+    </div>
+{% endblock %}
