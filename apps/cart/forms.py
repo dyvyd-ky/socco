@@ -6,5 +6,5 @@ class CheckoutForm(forms.Form):
     email = forms.EmailField(max_length=255)
     phone = forms.CharField(max_length=255)
     location = forms.CharField(max_length=255)
-    code = forms.CharField(max_length=10)
+    
     

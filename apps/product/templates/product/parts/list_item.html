@@ -1,19 +1,39 @@
+
     <div class="col-md-3 my-3">
         <div class="card h-100 shadow">
-        <img src="{{ product.get_thumbnail }}" class="img-fluid thumbnail">
-    
-            <div class="card-body small">                        
+            <a href="{% url 'product' product.category.slug product.slug %}">
+                <img src="{{ product.get_thumbnail }}" class="img-fluid thumbnail">
+            </a>
+            
+            <div class="card-body small">  
+                
+                <a class="badge badge-dark float-right" href="{% url 'vendor' product.vendor.id %}"> {{ product.vendor.business_name }}</a>                            
                 <h5>
-                    <a href="{% url 'product' product.category.slug product.slug %}"> {{ product.title }}</a></h5>
+                    <a class="atext font-weight-bold" href="{% url 'product' product.category.slug product.slug %}"> {{ product.title }}</a></h5>
                     
-                    <h6 class="font-weight-light">
+                    <h6 class="">
                         KShs {{ product.price }}
                     </h6> 
-                    
-                    
-                <hr>
-                <a class="badge badge-info" href="{% url 'vendor' product.vendor.id %}">{{ product.vendor.business_name }}</a>
-                <a class="btn btn-outline-info float-right" href="{% url 'product' product.category.slug product.slug %}">View</a>     
+                    <p>{{ product.description | safe | slice:":70" }} ... </p>
+                    <div class="card-footer">
+                        {% if product.in_cart %}
+                            <a href="{% url 'cart' %}" class="btn btn-success text-light">Go to Cart</a>
+                        {% else %}
+                            {% if product.num_available > 0 %}
+                                <a @click="addToCart({{ product.id }})" class="badge badge-danger text-light" 
+                                onclick="myFunction()">Add to cart</a>
+                                <div id="snackbar">Item added to Cart!</div>
+                            {% else %}
+                                <p class="text-danger">The product is out of stock!</p>
+                            {% endif %}
+                        {% endif %}
+                        
+                        
+                        <a class="btn btn-warning btn-sm float-right" href="{% url 'product' product.category.slug product.slug %}">View</a>
+                    </div>
             </div>
+            
         </div>
     </div>
+    
+    

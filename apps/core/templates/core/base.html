@@ -15,43 +15,79 @@
     <!--link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 
-    <title>Elytte</title>
+    <title>sokonisoko</title>
   </head>
   <body>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(){
+      // add padding top to show content behind navbar
+      navbar_height = document.querySelector('.navbar').offsetHeight;
+      document.body.style.paddingTop = navbar_height + 'px';
+    });
+    function myFunction() {
+      // Get the snackbar DIV
+      var x = document.getElementById("snackbar");
+
+      // Add the "show" class to DIV
+      x.className = "show";
+
+      // After 3 seconds, remove the show class from DIV
+      setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+    </script>
   <header>  
-  	<nav class="navbar navbar-expand-lg id="mainNav"">
-	    <div class="container">
-	  		<div class="navbar-brand mr-4">
-	  			<div class="heading shadow2">
-	  				<h3><a href="/">Elytte</a></h3>
+  	<nav class="navbar navbar-expand-lg shadow fixed-top" id="navbarapp">
+	  		<div class="navbar-brand">
+	  			<div class="heading">
+	  				<h3 class="font-weight-bold"><a href="/">sokonisoko</a></h3>
+            
 	  			</div>
 	  		</div>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="navbar-toggler-icon"><i class="fa fa-bars" style="color:#fff; font-size:28px;"></i></span>
+        
+        <a class="nav-item nav-link badge badge-danger font-weight-bold text-light cart" href="{% url 'cart' %}">Cart<i class="fa fa-shopping-cart text-light"></i>
+          <span class="badge badge-light">[[ numItems ]]</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="navbar-toggler-icon"><i class="fa fa-bars text-danger" style="color:#fff; font-size:28px;"></i></span>
 	      </button>
 	      <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="/"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+                
+              
+                  
+              {% if request.user.is_authenticated %}
+                {% for group in user.groups.all %}
+                {% if group.name == 'vendors' %}    
+                <a class="nav-item nav-link badge badge-danger text-light font-weight-bold account ml-3" href="{% url 'vendor_admin' %}">
+                  <i class="fa fa-user text-light"></i>
+                  My account</a>
+                {%endif%}
+                {%endfor%}
+              {% endif %}
+
             </div>
-            <div class="navbar-nav">
+           
+            <div class="navbar-nav font-weight-bold">
+                
+              
               {% if user.is_authenticated %}
                 
-                  <p class="nav-item my-auto mx-3">                        
-                  {{ user.username }}
-                </p> 
-                <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+	      
+                <a class="nav-item nav-link mx-3 text-danger"> <i class="fa fa-user text-danger mr-2"></i>Welcome {{ user.username }} </p> 
+                <a class="nav-item nav-link ml-3" href="{% url 'logout' %}">Logout</a>
                 {%else%}
-                <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                <a class="nav-item nav-link" href="{% url 'register' %}">SignUp</a>
+                <a class="nav-item nav-link ml-3" href="{% url 'login' %}">Login<i class="fa fa-sign-in ml-2" aria-hidden="true"></i></a>
+                <a class="nav-item nav-link ml-3" href="{% url 'register' %}">SignUp</a>
       
               {% endif %}
             
             </div>
+            
 	      </div>
-	    </div>
 	  </nav>
 	</header>
 
@@ -63,11 +99,11 @@
                   {{ message }}
               {% endfor %}
                 </div>
-
+                
           {% endif %}
       
           {% block content %}
-            
+          
           {% endblock %}
             <div class="container-fluid col-md-8 mt-5">
               {% if is_paginated %} {% if page_obj.has_previous %} <a class="btn btn-outline-success mb-4" href="?page=1">First</a>
@@ -86,35 +122,32 @@
 
 
 <!-- Footer -->
-<footer class="text-center text-lg-start bg-light text-muted pt-2">
-  <!-- Section: Social media 
+<footer class="text-center text-lg-start text-muted pt-2">
+  
   <section
     class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"
   >
-    Left 
+  
     <div class="me-5 d-none d-lg-block">
       <span>Get connected with us on social networks:</span>
     </div>
-     Left 
+     
 
-     Right 
+     
     <div>
-      <a href="" class="me-4 text-reset">
-        <i class="fa fa-facebook-f">&nbsp</i>
+      <a href="" class="mx-4 text-reset">
+        <i class="fa fa-facebook">&nbsp</i>
       </a>
-      <a href="" class="me-4 text-reset">
+      <a href="" class="mx-4 text-reset">
         <i class="fa fa-twitter">&nbsp</i>
       </a>
 
-      <a href="" class="me-4 text-reset">
+      <a href="" class="mx-4 text-reset">
         <i class="fa fa-instagram">&nbsp</i>
-      </a>
-      <a href="" class="me-4 text-reset">
-        <i class="fa fa-linkedin"></i>
       </a>
 
     </div>
-    Right
+    
   </section>
   <!-- Section: Social media -->
 
@@ -127,16 +160,28 @@
         <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
           <!-- Content -->
           <h6 class="text-uppercase fw-bold mb-4">
-            <i class="fas fa-gem me-3"></i>Elytte
+            <i class="fas fa-gem me-3"></i>soko moto technologies ltd
           </h6>
           <p>
-            Elytte is an online platform that enables quick and secure trading.
+            sokonisoko is an online platform that enables quick and secure trading.
             Each vendor has a store from whence you can shop. A complete transaction only occurs when parties are fully satisfied
             as per requests. Refunds are available within 24 hours after a confirmed delivery. 
           </p>
         </div>
         <!-- Grid column -->
-
+        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Contact
+          </h6>
+          <p><i class="fa fa-home me-3"></i> Nairobi, KENYA</p>
+          <p>
+            <i class="fa fa-envelope me-3"></i>
+            nisokonisoko@gmail.com
+          </p>
+          <p><i class="fa fa-phone me-3"></i> + 254 706024979</p>
+          <p><i class="fa fa-phone me-3"></i> + 254 742727339</p>
+        </div>
         <!-- Grid column -->
         <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
           <!-- Links -->
@@ -153,15 +198,15 @@
             <a href="#!" class="text-reset">Accesories</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">Baby</a>
+            <a href="#!" class="text-reset">and more!</a>
           </p>
         </div>
         <!-- Grid column -->
 
         <!-- Grid column -->
-        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+        <div class="col-md-3 fw-bold col-lg-2 col-xl-2 mx-auto mb-4">
           <!-- Links -->
-          <h6 class="text-uppercase fw-bold mb-4">
+          <h6 class="text-uppercase mb-4">
             Useful links
           </h6>
           <p>
@@ -180,19 +225,7 @@
         <!-- Grid column -->
 
         <!-- Grid column -->
-        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-          <!-- Links -->
-          <h6 class="text-uppercase fw-bold mb-4">
-            Contact
-          </h6>
-          <p><i class="fas fa-home me-3"></i> Nairobi, KENYA</p>
-          <p>
-            <i class="fas fa-envelope me-3"></i>
-            elytte.gen@gmail.com
-          </p>
-          <p><i class="fas fa-phone me-3"></i> + 254 727 924 948</p>
-          <p><i class="fas fa-print me-3"></i> + 254 779 076 450</p>
-        </div>
+        
         <!-- Grid column -->
       </div>
       <!-- Grid row -->
@@ -203,17 +236,62 @@
   <!-- Copyright -->
   <div class="text-center text-dark bg-custom p-4">
     © 2021 Copyright:
-    <a class="text-reset fw-bold" href="https://mdbootstrap.com/">elytte.com</a>
+    <a class="text-reset fw-bold" href="https://sokonisoko.com/">sokonisoko.com</a>
   </div>
   <!-- Copyright -->
 </footer>
 <!-- Footer -->
+
     <!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/vuex@3.5.1/dist/vuex.js"></script>
+		<script>
+			var store = new Vuex.Store({
+				state: {
+					numItems: {{ cart.get_total_length }},
+					totalCost: {{ cart.get_total_cost }}
+				},
+				mutations: {
+					increment(state, quantity) {
+						state.numItems += quantity;
+					},
+					changeTotalCost(state, newCost) {
+						state.totalCost += newCost
+					}
+				}
+			});
 
+			var navbarapp = new Vue({
+				el: '#navbarapp',
+				delimiters: ['[[', ']]'],
+				store: store,
+				data () {
+					return {
+						menuClass: false
+					}
+				},
+				computed: {
+					numItems: function() {
+						return store.state.numItems
+					}
+				},
+				methods: {
+					toggleMenu() {
+						console.log('toggleMenu');
+
+						this.menuClass = !this.menuClass;
+					},
+
+          
+				}
+			});
+		</script>
+
+		{% block scripts %}
+		{% endblock %}
 
   </body>
 </html>

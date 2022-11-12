@@ -1,8 +1,8 @@
 from django.urls import path
 
-from . import views
+from apps.cart.views import cart_detail, success
 
 urlpatterns = [
-    path('', views.cart_detail, name='cart'),
-    path('success/', views.success, name='success')
+    path('', cart_detail, name='cart'),
+    path('success/', success, name='success')
 ]

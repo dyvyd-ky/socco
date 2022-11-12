@@ -8,6 +8,7 @@ class Vendor(models.Model):
     about = models.TextField(max_length=380)
     instagram_url = models.URLField(null=True, blank=True)
     twitter_url = models.URLField(null=True, blank=True)
+    facebook_url = models.URLField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.OneToOneField(User, related_name='vendor', on_delete=models.CASCADE)
     email = models.EmailField()

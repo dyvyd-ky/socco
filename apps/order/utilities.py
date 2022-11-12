@@ -9,7 +9,21 @@ from apps.cart.cart import Cart
 
 from .models import Order, OrderItem
 
-def checkout(request, first_name, last_name, email, location, phone, code, amount):
+def checkout(request, first_name, last_name, email, location, phone ):
+    order = Order(first_name=first_name, last_name=last_name, email=email, location=location, phone=phone)
+    
+    if request.user.is_authenticated:
+        order.user = request.user
+
+    order.save()
+
+    cart = Cart(request)
+
+    for item in cart:
+        OrderItem.objects.create(order=order, product=item['product'], price=item['price'], quantity=item['quantity'])
+
+    return order.id
+'''def checkout(request, first_name, last_name, email, location, phone, code, amount):
     order = Order.objects.create(first_name=first_name, last_name=last_name, email=email, location=location, phone=phone, code=code, paid_amount=amount)
 
     for item in Cart(request):
@@ -17,7 +31,7 @@ def checkout(request, first_name, last_name, email, location, phone, code, amoun
     
         order.vendors.add(item['product'].vendor)
 
-    return order
+    return order'''
 
 def notify_vendor(order):
 

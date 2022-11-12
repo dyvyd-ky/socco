@@ -13,7 +13,19 @@
 
         <div class="field">
             <div class="control">
-                <button class="btn btn-info">Save changes</button>
+                <button class="btn btn-danger">Save changes</button>
+            </div>
+        </div>
+    </form>
+    <h2>Other Images</h2>
+    <form method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ image_form.as_p }}
+
+        <div class="field">
+            <div class="control">
+                <button class="btn btn-danger mb-3">Add Images</button>
             </div>
         </div>
     </form>

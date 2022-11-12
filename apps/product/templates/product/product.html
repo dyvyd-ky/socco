@@ -6,50 +6,58 @@
   
             
             
-                <div class="container shadow py-3">
+                <div class="container-fluid py-3 shadow" id="productapp">
+                    <!--div class="container messages" v-if="showMessage">
+                        <div class="col-md-4 bg-warning text-light py-2">
+                            The product was added to the cart!
+                        </div>
+                    </div-->
                     
-                    <div class="card-body shadow">
+                    <div class="py-3 px-3">
                         <div class="row">
-                            <div class="col-md-4">
+                            
+                            <div class="col-md-6">
                                 {% if product.image %}
                                 <img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
                                 {% endif %}
                             </div>
                             
-                            <div class="col-md-5">    
-                                    <h3 class="font-weight-light">{{ product.title }}</h3>
+                            <div class="col-md-4">    
+                                    <h3 class="font-weight-bold">{{ product.title }}</h3>
                                     <h6 class="text-black">
-                                        KShs {{ product.price }}                                  
+                                        KSh {{ product.price }}                                  
                                     </h6>    
                                     
                                     <p class="mt-2"><strong>Description: </strong> {{ product.description | safe}}</p>   
-                                   
-                                    <form method="post" action=".">
-                                        {% csrf_token %}
-                
-                                        <div class="field my-3">        
-                                            <input type="number" name="quantity" value="1" class="control input form-control-xxxx" min="1">
-                                            <button class="control btn btn-outline-info">Add to Basket</button>
-                                        </div>
-                                    </form>     
-                                    <a href="{% url 'cart' %}" class="btn btn-info">BASKET{% if cart %} ({{ cart|length }}){% endif %}</a>                            
-                            </div> 
-                            <div class="col-md-3">
-                                <div class="card card-body bg-light">
-                                    <a href="{% url 'vendor' product.vendor.id %}"> 
-                                                    
-                                        <img class="img-fluid rounded profile" src="{{product.vendor.profile_pic.url}}">
-                                        <h6 class="font-weight-bold float-right mt-3">{{ product.vendor.business_name }}'s Store <br>
-                                        View Here </h6>
+                                 
 
-                                     
+                                    {% if product.in_cart %}
+                                        <a href="{% url 'cart' %}" class="btn btn-warning text-light font-weight-bold">Go to Cart</a>
+                                    {% else %}
+                                        {% if product.num_available > 0 %}
+                                        <a @click="addToCart({{ product.id }})" class="badge badge-danger text-light" 
+                                            onclick="myFunction()">Add to cart</a>
+                                            <div id="snackbar">Item added to Cart!</div>
+                                        {% else %}
+                                            <p class="text-danger">The product is out of stock!</p>
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                    
+    
+                                                                
+                                   
+                            </div> 
+                            <div class="col-md-2">
+                                <div class="card mt-3">
+                                    <a href="{% url 'vendor' product.vendor.id %}"> 
+                                        <h6 class="font-weight-bold py-2 text-center text-light card-header bg-lightt">{{ product.vendor.business_name }}'s Store</h6>   
+                                        <img class="img-fluid card-body" src="{{product.vendor.profile_pic.url}}">
+                                        
                                     </a>
-                                    <hr>
-                                    <p><i class="fa fa-instagram mr-2"></i><a href="{{ vendor.instagram_url }}" target="_blank" rel="noreferrer noopener">Instagram</a></p>
-                                    <p><i class="fa fa-twitter mr-2"></i><a href="{{ vendor.twitter_url }}" target="_blank" rel="noreferrer noopener">Twitter</a></p>
-                            
-                                </div>   
-                            </div>     
+                                </div> 
+                                  
+                            </div>   
                         </div>
                     </div>  
                   
@@ -71,8 +79,61 @@
 
 
 {% endblock content %}
+{% block scripts %}
+<script>
+    var productapp = new Vue({
+        el: '#productapp',
+        delimeters: ['[[', ']]'],
+        store: store,
+        data () {
+            return {
+                showMessage: false,
+                images: [{{ imagesstring|safe }}]
+            }
+        },
+        mounted() {
+            console.log('Mounted');
+        },
+        methods: {
+           
+            addToCart(product_id) {
+                console.log('Product_id:', product_id);
 
+                var data = {
+                    'product_id': product_id, 
+                    'update': false,
+                    'quantity': 1
+                };
+                    
+                fetch('/api/add_to_cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    console.log(response)
 
+                    this.showMessage = true
+
+                    store.commit('increment', 1);
+
+                    setTimeout(() => {
+                        this.showMessage = false
+                    }, 2000)
+                })
+                .catch(function (error) {
+                    console.log('Error 2');
+                    console.log(error);
+                })
+            }
+        }
+    });
+</script>
+{%endblock%}
 
 
 

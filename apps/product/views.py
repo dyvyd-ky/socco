@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from apps.vendor.models import Vendor
 
 from .forms import AddToCartForm
-from .models import Category, Product
+from .models import Category, Product, ProductReview
 
 from apps.cart.cart import Cart
 
@@ -26,38 +26,40 @@ def search(request):
         })
 
 def product(request, category_slug, product_slug):
-    cart = Cart(request)
 
     product = get_object_or_404(Product, category__slug=category_slug, slug=product_slug)
+    product.num_visits = product.num_visits + 1
 
     imagesstring = '{"thumbnail": "%s", "image": "%s", "id": "mainimage"},' % (product.get_thumbnail(), product.image.url)
 
     for image in product.images.all():
         imagesstring += ('{"thumbnail": "%s", "image": "%s", "id": "%s"},' % (image.get_thumbnail(), product.image.url, image.id))
     
-    print(imagesstring)
+    # Add review
 
-    if request.method == 'POST':
-        form = AddToCartForm(request.POST)
+    if request.method == 'POST' and request.user.is_authenticated:
+        stars = request.POST.get('stars', 3)
+        content = request.POST.get('content', '')
 
-        if form.is_valid():
-            quantity = form.cleaned_data['quantity']
+        review = ProductReview.objects.create(product=product, user=request.user, stars=stars, content=content)
 
-            cart.add(product_id=product.id, quantity=quantity, update_quantity=False)
+        return redirect('product_detail', category_slug=category_slug, slug=product_slug)
 
-            messages.success(request, 'The product was added to the cart')
-
-            return redirect('product', category_slug=category_slug, product_slug=product_slug)
-    else:
-        form = AddToCartForm()
-
+    
     similar_products = list(product.category.products.exclude(id=product.id))
 
     if len(similar_products) >= 4:
         similar_products = random.sample(similar_products, 4)
+    
+    cart = Cart(request)
+    if cart.has_product(product.id):
+        product.in_cart = True
+    else:
+        product.in_cart = False
+
 
     context = {
-        'form': form,
+        
         'product': product,
         'similar_products': similar_products,
         'imagesstring': "[" + imagesstring.rstrip(',') + "]"

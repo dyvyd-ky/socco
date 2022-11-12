@@ -1,24 +1,43 @@
-{% extends "core/base.html" %}
-{% load crispy_forms_tags %}
+{% extends 'core/base.html' %}
+
 {% block content %}
-      <div class="container col-md-4 shadow py-3">
-        <form method="POST">
-          {% csrf_token %}
-          <fieldset class="form-group">
-            <h4 class="font-weight-bold border-bottom py-2">Login</h4>
-            {{ form|crispy }}
-          </fieldset>
-          <div class="form-group">
-            <button class="btn btn-outline-info" type="submit">Login</button>
-            <small class="text-muted ml-2">
-              <a href="{% url 'password_reset' %}">Forgot password?</a>
-            </small>
-          </div>
+<div class="container">
+    <div class="col-md-12 shadow pb-3">
+        <h1 class="title">Login</h1>
+
+        <form method="post" action=".">
+            {% csrf_token %}
+    
+            <input type="hidden" name="next" value="{{ next }}">
+    
+            <div class="field">
+                <label>Username</label>
+    
+                <div clas="control">
+                    <input type="text" class="input" name="username" id="id_username">
+                </div>
+            </div>
+    
+            <div class="field">
+                <label>Password</label>
+                
+                <div clas="control">
+                    <input type="password" class="input" name="password" id="id_password">
+                </div>
+            </div>
+    
+            {% if form.errors %}
+                <div class="notification is-danger">
+                    Your username and password didn't match! Please try again!
+                </div>
+            {% endif %}
+    
+            <div class="field">
+                <div class="control">
+                    <button class="btn btn-danger btn-sm mt-3">Login</button>
+                </div>
+            </div>
         </form>
-        <div class="border-top pt-3">
-          <small class="text-muted">
-            Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
-          </small>
-        </div>
-      </div>
-{% endblock content %}
+    </div>
+</div>
+{% endblock %}

@@ -3,164 +3,350 @@
 {% block title %}Cart | {% endblock %}
 
 {% block content %}
-<div class="container shadow">
-    <div class="bg-light py-3">
-        <a href="/" class="btn btn-outline-info">&#x2190;Continue Shopping</a>
-    </div>
+<div>
+    <div id="cartapp" class="container pt-3">
+        <a href="/" class="btn bg-lightt text-light font-weight-bold mb-2 ml-2">continue shopping</a>
 
-    {% if cart %}
-        <div class="container">
-            <div class="table">
-                <table class="table">
-                    <thead>
-                        <th></th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th></th>
-                    </thead>
+        {% if cart %}
+            <div v-if="products.length > 0" class="shadow px-3 pb-2">
+                <div class="table" style="overflow-x:auto;">
+                    <table class="table">
+                        <thead>
+                            <th></th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th></th>
+                        </thead>
 
-                    <tbody>
-                        {% for item in cart %}
-                            <tr>
+                        <tbody>
+                            <tr v-for="product in products">
+                                
                                 <td>
-                                    <div>
-                                        <img class="cart-image" src="{{ item.product.get_thumbnail }}">
-                                    </div>
+                                
+                                    <img class="cart-image" :src="product.thumbnail">                           
+                              
                                 </td>
                                 <td>
-                                    <a href="{% url 'product' item.product.category.slug item.product.slug %}">{{ item.product.title }}</a>
+                                    <a :href="product.url" class="font-weight-bold text-dark">
+                                        [[ product.title ]]
+                                    </a>
                                 </td>
-                                <td>
-                                    {{ item.quantity }}
-
-                                    <a href="?change_quantity={{ item.id }}&quantity=-1">-</a>
-                                    <a href="?change_quantity={{ item.id }}&quantity=1">+</a>
-                                </td>
-                                <td>KShs {{ item.total_price }}</td>
-                                <td><a href="?remove_from_cart={{ item.id }}" class="delete">Remove</a></td>
+                                <td><a class="badge bg-dangerr text-light px-2" @click="decrementQuantity(product.id, product.quantity, product.price)">-</a> [[ product.quantity ]] <a class="badge badge-warning text-light px-2" @click="incrementQuantity(product.id, product.quantity, product.price)">+</a></td>
+                                <td>[[ product.total_price ]]</td>
+                                <td><a @click="removeFromCart(product.id)" class="badge badge-secondary text-light">Remove</a></td>
                             </tr>
-                        {% endfor %}
-                    </tbody>
+                        </tbody>
 
-                    <tfoot>
-                        <tr>
-                            <td></td>
-                            <td><strong>Total cost</strong></td>
-                            <td><strong>{{ cart|length}}</strong></td>
-                            <td colspan="2"><strong>KShs {{ cart.get_total_cost }}</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
+                        <tfoot>
+                            <tr>
+                                <td>Total cost:</td>
+                                <td>[[ numItems ]]</td>
+                                <td></td>
+                                <td>[[ totalCost ]]</td>
+                            </tr>
 
+                            
+                        </tfoot>
+                    </table>
+
+                    <hr>
+                </div>
+
+                {% if not request.user.is_authenticated %}
+                    <p>Continue as guest, fill in the form below or <a href="{% url 'login' %}">log in</a> / <a href="{% url 'register' %}">sign up</a>.</p>
+
+                    <hr>
+                {% endif %}
+
+                
+
+                <div class="container">
+                    <div class="bg-danger col-md-4">
+                        <h2 class="text-light px-2">Contact Information</h2>
+                    </div>
+                    <div class="col-md-4 shadow mb-3 pb-3">
+                    
+                        <div class="col-md-12 font-weight-bold">
+                            <label>First name</label>
     
-           
-        <form method="post" action="." id="payment-form">
-            {% csrf_token %}    
-
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ form.non_field_errors}}
-                </div>
-            {% endif %}
-
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                    <ul>
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <li><strong>{{ field.label }}: </strong>{{ error }}</li>
-                            {% endfor %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-            <div class="col-md-10 my-5">
-            <div class="row"> 
-                <div class="col-md-6">
-                    <div class="col-md-10 card card-body shadow">
-                        <h2 class="subtitle">Contact Info</h2>
-                            <div class="field">
-                                <label>First name</label>
-
-                                <div class="control">
-                                    <input class="input" type="text" name="first_name">
-                                </div>
+                            <div class="control">
+                                <input class="input" type="text" name="first_name" v-model="first_name">
                             </div>
-
-                        <div class="field">
+                        </div>
+    
+                        <div class="col-md-12 font-weight-bold">
                             <label>Last name</label>
-
+    
                             <div class="control">
-                                <input class="input" type="text" name="last_name">
+                                <input class="input" type="text" name="last_name" v-model="last_name">
                             </div>
                         </div>
-
-                        <div class="field">
+    
+                        <div class="col-md-12 font-weight-bold">
                             <label>E-mail</label>
-
+    
                             <div class="control">
-                                <input class="input" type="email" name="email">
+                                <input class="input" type="email" name="email" v-model="email">
                             </div>
                         </div>
-
-                        <div class="field">
+    
+                        <div class="col-md-12 font-weight-bold">
                             <label>Phone</label>
-
+    
                             <div class="control">
-                                <input class="input" type="text" name="phone">
+                                <input class="input" type="text" name="phone" v-model="phone">
                             </div>
-                        </div>   
-                        <div class="field">
+                        </div>
+                    
+
+                    
+                        <div class="col-md-12 font-weight-bold">
                             <label>Location</label>
 
                             <div class="control">
-                                <input class="input" type="text" name="location">
+                                <input class="input" type="text" name="location" v-model="location">
                             </div>
                         </div>
-                    </div>
                 </div>
-                    
-                <div class="col-md-6">
-                    
-                    <div class="col-md-10 card card-body h-100 shadow">
-                            <h2 class="subtitle">Payment information</h2>
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <div class="alert alert-danger">{{ message }}</div>
-                                {% endfor %}
-                            {% endif %}
-            
-                            <div class="field">
-                                <div class="shadow col-md-8 card card-body">
-                                    <label>MPESA TILL NUMBER: <h3 class="text-success">123456</h4></label>
-                                </div>
-                                <label>Mpesa Confirmation Code</label>
-                                <p>i.e QCTXXXXJHN </p>
-                                <small>Please enter your transaction code to confirm order.</small>
-                                <div class="control">
-                                    <input class="input" type="text" name="code">
-                                </div>
-                            </div>   
                         
-                            <div class="field mt-3">
-                                <div class="control">
-                                    <button class="btn btn-info" type="submit">Checkout</button>
-                                </div>
-                            </div>
-            
-                    </div>
-                </div>    
-            </form>    
+            </div>
+            <!--p v-else>Your cart is empty!</p-->
+        {% else %}
+            <p>Your cart is empty!</p>
+        {% endif %}
+
+        <div v-if="errors.length > 0">
+            <article class="message is-danger"
+                v-for="error in errors"
+            >
+                <div class="message-header">
+                    <p>Error</p>
+                </div>
+                <div class="message-body">
+                    [[ error ]]
+                </div>
+            </article>
+        </div>
     </div>
-    {% else %}
-    <div class="alert alert-info">
-        <p>You don't have any products in your basket!</p>
-    </div>
-    {% endif %}
-</div> 
+</div>
 {% endblock %}
 
+{% block scripts %}
+<script>
+    var productapp = new Vue({
+        el: '#cartapp',
+        delimiters: ['[[', ']]'],
+        store: store,
+        data () {
+            return {
+                errors: [],
+                first_name: '{{ first_name }}',
+                last_name: '{{ last_name }}',
+                email: '{{ email }}',
+                location: '{{ location }}',
+                phone: '{{ phone }}',
+                products: [{{ productsstring|safe }}],
+                
+            }
+        },
+        
+        computed: {
+            numItems: function() {
+                return store.state.numItems
+            },
+            totalCost: function() {
+                return store.state.totalCost
+            },
+            
+        },
+        methods: {
+            validateForm() {
+                this.errors = [];
 
+                if (this.first_name === '') {
+                    this.errors.push('First name is empty');
+                }
+
+                if (this.last_name === '') {
+                    this.errors.push('Last name is empty');
+                }
+
+                if (this.email === '') {
+                    this.errors.push('Email is empty');
+                }        
+
+                if (this.location === '') {
+                    this.errors.push('Location is empty');
+                }
+
+                if (this.phone === '') {
+                    this.errors.push('Phone is empty');
+                }
+
+                return this.errors.length;
+            },
+            
+            
+        
+           /* buy(gateway) {
+                var data = {
+                    'first_name': this.first_name,
+                    'last_name': this.last_name,
+                    'email': this.email,
+                    'location': this.place,
+                    'phone': this.phone,                    
+                    'gateway': gateway
+                };
+
+                if (this.validateForm() === 0) {
+                    if (gateway === 'stripe') {
+                        var stripe = Stripe('{{ pub_key }}');
+
+                        fetch('/api/create_checkout_session/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            credentials: 'same-origin',
+                            body: JSON.stringify(data)
+                        })
+                        .then(function(response) {
+                            return response.json()
+                        })
+                        .then(function(session) {
+                            return stripe.redirectToCheckout({ sessionId: session.session.id })
+                        })
+                        .then(function(result) {
+                            if (result.error) {
+                                alert(result.error.message)
+                            }
+                        })
+                        .catch(function(error) {
+                            console.log('Error:', error);
+                        });
+                    } 
+                            
+                }
+            },*/
+            incrementQuantity(product_id, quantity, price) {
+                console.log('Product_id:', product_id);
+
+                for (var i = 0; i < this.products.length; i++) {
+                    var product = this.products[i];
+
+                    if (product.id === product_id) {
+                        if (quantity < product.num_available) {
+                            var data = {
+                                'product_id': product_id, 
+                                'update': true,
+                                'quantity': parseInt(quantity) + 1
+                            };
+
+                            store.commit('increment', 1);
+                            store.commit('changeTotalCost', parseFloat(price));
+                                
+                            fetch('/api/add_to_cart/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                credentials: 'same-origin',
+                                body: JSON.stringify(data)
+                            })
+                            .then((response) => {
+                                console.log(response)
+
+                                for (var i = 0; i < this.products.length; i++) {
+                                    var product = this.products[i];
+            
+                                    if (product.id === product_id) {
+                                        this.products[i].quantity = parseInt(this.products[i].quantity) + 1;
+                                        this.products[i].total_price = parseInt(this.products[i].quantity) * parseFloat(this.products[i].price)
+                                    }
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log('Error 2');
+                                console.log(error);
+                            })
+                        } else {
+                            alert('No more available in stock!');
+                        }
+                    } 
+                }
+            },
+            decrementQuantity(product_id, quantity, price) {
+                console.log('Product_id:', product_id);
+
+                var data = {
+                    'product_id': product_id, 
+                    'update': true,
+                    'quantity': parseInt(quantity) - 1
+                };
+                    
+                if (parseInt(quantity) - 1 === 0) {
+                    this.removeFromCart(product_id);
+                } else {
+                    store.commit('increment', -1);
+                    store.commit('changeTotalCost', -parseFloat(price));
+                 
+                    fetch('/api/add_to_cart/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(data)
+                    })
+                    .then((response) => {
+                        console.log(response)
+
+                        for (var i = 0; i < this.products.length; i++) {
+                            var product = this.products[i];
+    
+                            if (product.id === product_id) {
+                                this.products[i].quantity = parseInt(this.products[i].quantity) - 1;
+                                this.products[i].total_price = parseInt(this.products[i].quantity) * parseFloat(this.products[i].price)
+                            }
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log('Error 2');
+                        console.log(error);
+                    })
+                }
+            },
+            removeFromCart(product_id) {
+                console.log('Remove product_id:', product_id);
+
+                var data = {
+                    'product_id': product_id
+                };
+                    
+                fetch('/api/remove_from_cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    console.log(response)
+
+                    this.products = this.products.filter(product => product.id !== product_id)
+                })
+                .catch(function (error) {
+                    console.log('Error 2');
+                    console.log(error);
+                })
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -3,10 +3,17 @@
 {% block title %}{{ category.title }} | {% endblock %}
 
 {% block content %}
-<div class="container shadow py-3">
-    <div class="bg-light py-3">
-        <h2>{{ category.title }}</h2>
-    </div>
+<div class="container-fluid shadow py-3" id="listapp">
+        <div class="container-fluid1">
+            <div class="bg-lightt col-md-12 d-flex justify-content-center shadow3">
+                <div class="col-md-5">
+                    <img src="{{ category.get_thumbnail }}" class="col-md-12 img-fluid">
+                    <div class="text-block">
+                        <h2 class="font-weight-bold bg-danger px-3 text-light" style="border-radius: 5px;">{{ category.title }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
     <div class="flex-container">
         {% for product in category.products.all %}
             {% include 'product/parts/list_item.html' %}
@@ -14,3 +21,59 @@
     </div>
 </div>
 {% endblock %}
+{% block scripts %}
+    <script>
+        var listapp = new Vue({
+            el: '#listapp',
+            delimeters: ['[[', ']]'],
+            store: store,
+            data () {
+                return {
+                    showMessage: false,
+                    images: [{{ imagesstring|safe }}]
+                }
+            },
+            mounted() {
+                console.log('Mounted');
+            },
+            methods: {
+               
+                addToCart(product_id) {
+                    console.log('Product_id:', product_id);
+    
+                    var data = {
+                        'product_id': product_id, 
+                        'update': false,
+                        'quantity': 1
+                    };
+                        
+                    fetch('/api/add_to_cart/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(data)
+                    })
+                    .then((response) => {
+                        console.log(response)
+    
+                        this.showMessage = true
+    
+                        store.commit('increment', 1);
+    
+                        setTimeout(() => {
+                            this.showMessage = false
+                        }, 2000)
+                    })
+                    .catch(function (error) {
+                        console.log('Error 2');
+                        console.log(error);
+                    })
+                }
+            }
+        });
+    </script>
+    {%endblock%}
+    

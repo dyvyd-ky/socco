@@ -1,21 +1,13 @@
-from django.db import models
 from django.contrib.auth.models import User
-from PIL import Image
+from django.db import models
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-    description = models.TextField(max_length=250)
+class Userprofile(models.Model):
+    user = models.OneToOneField(User, related_name='userprofile', on_delete=models.CASCADE)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    phone = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return '%s' % self.user.username
 
-    def save(self, *args, **kwargs):
-        super(Profile, self).save(*args, **kwargs)
-
-        img = Image.open(self.image.path)
-
-        if img.height > 50 or img.width > 50:
-            output_size = (50, 50)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+User.userprofile = property(lambda u:Userprofile.objects.get_or_create(user=u)[0])

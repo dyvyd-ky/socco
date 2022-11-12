@@ -11,58 +11,39 @@ from apps.order.utilities import checkout, notify_customer, notify_vendor
 
 def cart_detail(request):
     cart = Cart(request)
+    productsstring = ''
 
-    if request.method == 'POST':
-        form = CheckoutForm(request.POST)
+    for item in cart:
+        product = item['product']
+        url = '/%s/%s/' % (product.category.slug, product.slug)
+        b = "{'id': '%s', 'title': '%s', 'price': '%s', 'quantity': '%s', 'total_price': '%s', 'thumbnail': '%s', 'url': '%s', 'num_available': '%s'}," % (product.id, product.title, product.price, item['quantity'], item['total_price'], product.get_thumbnail(), url, product.num_available)
 
-        if form.is_valid():
-            '''
-            stripe.api_key = settings.STRIPE_SECRET_KEY
+        productsstring = productsstring + b
 
-            stripe_token = form.cleaned_data['stripe_token']
-
-            try:
-                charge = stripe.Charge.create(
-                    amount=int(cart.get_total_cost() * 100),
-                    currency='USD',
-                    description='Charge from Interiorshop',
-                    source=stripe_token
-                )
-            '''
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            phone = form.cleaned_data['phone']
-            location = form.cleaned_data['location']
-            code = form.cleaned_data['code']
-                
-
-            order = checkout(request, first_name, last_name, email, location, phone, code, cart.get_total_cost())
-
-            cart.clear()
-
-            notify_customer(order)
-            notify_vendor(order)
-
-            return redirect('success')
+    if request.user.is_authenticated:
+        first_name = request.user.first_name
+        last_name = request.user.last_name
+        email = request.user.email
+        location = request.user.userprofile.location
+        phone = request.user.userprofile.phone
     else:
-        form = CheckoutForm()
+        first_name = last_name = email = location = phone = ''
 
-    remove_from_cart = request.GET.get('remove_from_cart', '')
-    change_quantity = request.GET.get('change_quantity', '')
-    quantity = request.GET.get('quantity', 0)
+    context = {
+        'cart': cart,
+        'first_name': first_name,
+        'last_name': last_name,
+        'email': email,
+        'location': location,
+        'phone': phone,
+        
+        'productsstring': productsstring.rstrip(',')
+    }
 
-    if remove_from_cart:
-        cart.remove(remove_from_cart)
-
-        return redirect('cart')
-    
-    if change_quantity:
-        cart.add(change_quantity, quantity, True)
-
-        return redirect('cart')
-
-    return render(request, 'cart/cart.html', {'form': form})
+    return render(request, 'cart/cart.html', context)
 
 def success(request):
-    return render(request, 'cart/success.html')
+    cart = Cart(request)
+    cart.clear()
+    
+    return render(request, 'success.html')

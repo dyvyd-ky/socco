@@ -26,12 +26,12 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, related_name='items', on_delete=models.CASCADE)
     vendor = models.ForeignKey(Vendor, related_name='items', on_delete=models.CASCADE)
     vendor_paid = models.BooleanField(default=False)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.FloatField()
     quantity = models.IntegerField(default=1)
     
     
     def __str__(self):
-        return '%s' % self.id
+        return '{} from {}'.format(self.product,self.vendor)
     
     def get_total_price(self):
         return self.price * self.quantity
