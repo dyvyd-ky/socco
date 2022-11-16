@@ -8,7 +8,7 @@ class UserprofileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserprofileForm, self).__init__(*args, **kwargs)
 
-        self.fields['location'].widget.attrs['class'] = 'input'
+        self.fields['address'].widget.attrs['class'] = 'input'
         self.fields['phone'].widget.attrs['class'] = 'input'
 
     class Meta:
@@ -20,7 +20,7 @@ class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
     email = forms.EmailField(max_length=255, required=True)
-    location = forms.CharField(max_length=255, required=True)
+    address = forms.CharField(max_length=255, required=True)
     phone = forms.CharField(max_length=255, required=True)
     
 
@@ -33,10 +33,10 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].widget.attrs['class'] = 'input'
         self.fields['first_name'].widget.attrs['class'] = 'input'
         self.fields['last_name'].widget.attrs['class'] = 'input'
-        self.fields['location'].widget.attrs['class'] = 'input'
+        self.fields['address'].widget.attrs['class'] = 'input'
         self.fields['phone'].widget.attrs['class'] = 'input'
         
 
     class Meta:
         model = User
-        fields = ['username', 'first_name','last_name', 'email', 'password1', 'password2', 'phone', 'location']
+        fields = ['username', 'first_name','last_name', 'email', 'password1', 'password2', 'address', 'phone']

@@ -92,20 +92,24 @@
                         </div>
     
                         <div class="col-md-12 font-weight-bold">
-                            <label>Phone</label>
+                            <label>Address</label>
     
+                            <div class="control">
+                                <input class="input" type="text" name="address" v-model="address">
+                            </div>
+                        </div>
+                    
+                        <div class="col-md-12 font-weight-bold">
+                            <label>phone</label>
+
                             <div class="control">
                                 <input class="input" type="text" name="phone" v-model="phone">
                             </div>
                         </div>
-                    
-
-                    
-                        <div class="col-md-12 font-weight-bold">
-                            <label>Location</label>
-
+                        <div class="field">
                             <div class="control">
-                                <input class="input" type="text" name="location" v-model="location">
+                                <button class="btn btn-success" v-on:click="buy('mpesa')">Lipa na Mpesa</button>
+                        
                             </div>
                         </div>
                 </div>
@@ -144,7 +148,7 @@
                 first_name: '{{ first_name }}',
                 last_name: '{{ last_name }}',
                 email: '{{ email }}',
-                location: '{{ location }}',
+                address: '{{ address }}',
                 phone: '{{ phone }}',
                 products: [{{ productsstring|safe }}],
                 
@@ -176,8 +180,8 @@
                     this.errors.push('Email is empty');
                 }        
 
-                if (this.location === '') {
-                    this.errors.push('Location is empty');
+                if (this.address === '') {
+                    this.errors.push('Address is empty');
                 }
 
                 if (this.phone === '') {
@@ -189,19 +193,18 @@
             
             
         
-           /* buy(gateway) {
+           buy(gateway) {
                 var data = {
                     'first_name': this.first_name,
                     'last_name': this.last_name,
                     'email': this.email,
-                    'location': this.place,
+                    'address': this.address,
                     'phone': this.phone,                    
                     'gateway': gateway
                 };
 
                 if (this.validateForm() === 0) {
-                    if (gateway === 'stripe') {
-                        var stripe = Stripe('{{ pub_key }}');
+                    if (gateway === 'mpesa') {
 
                         fetch('/api/create_checkout_session/', {
                             method: 'POST',
@@ -215,8 +218,17 @@
                         .then(function(response) {
                             return response.json()
                         })
-                        .then(function(session) {
-                            return stripe.redirectToCheckout({ sessionId: session.session.id })
+                        fetch('/daraja/stk-push/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                credentials: 'same-origin',
+                                body: JSON.stringify(data)
+                        })
+                        .then(function(result) {
+                            window.location.href = '/cart/success/';
                         })
                         .then(function(result) {
                             if (result.error) {
@@ -229,7 +241,7 @@
                     } 
                             
                 }
-            },*/
+            },
             incrementQuantity(product_id, quantity, price) {
                 console.log('Product_id:', product_id);
 

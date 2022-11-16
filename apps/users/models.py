@@ -4,7 +4,7 @@ from django.db import models
 class Userprofile(models.Model):
     user = models.OneToOneField(User, related_name='userprofile', on_delete=models.CASCADE)
     email = models.EmailField(max_length=255, blank=True, null=True)
-    location = models.CharField(max_length=255, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):

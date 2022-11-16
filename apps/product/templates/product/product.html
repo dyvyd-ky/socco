@@ -32,7 +32,7 @@
                                  
 
                                     {% if product.in_cart %}
-                                        <a href="{% url 'cart' %}" class="btn btn-warning text-light font-weight-bold">Go to Cart</a>
+                                        <a href="{% url 'cart' %}" class="btn bg-danger text-light font-weight-bold">Item already in cart! Go to Cart</a>
                                     {% else %}
                                         {% if product.num_available > 0 %}
                                         <a @click="addToCart({{ product.id }})" class="badge badge-danger text-light" 

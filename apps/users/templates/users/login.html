@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="container">
-    <div class="col-md-12 shadow pb-3">
-        <h1 class="title">Login</h1>
+    <div class="col-md-4 bg-lightt shadow pb-3 pt-3" style="border-radius: 15px;">
+        <h1 class="text-light">Login</h1>
 
         <form method="post" action=".">
             {% csrf_token %}
     
             <input type="hidden" name="next" value="{{ next }}">
     
-            <div class="field">
+            <div class="field text-light">
                 <label>Username</label>
     
                 <div clas="control">
@@ -18,7 +18,7 @@
                 </div>
             </div>
     
-            <div class="field">
+            <div class="field text-light">
                 <label>Password</label>
                 
                 <div clas="control">
@@ -34,7 +34,7 @@
     
             <div class="field">
                 <div class="control">
-                    <button class="btn btn-danger btn-sm mt-3">Login</button>
+                    <button class="btn btn-light btn-sm mt-3">Login</button>
                 </div>
             </div>
         </form>

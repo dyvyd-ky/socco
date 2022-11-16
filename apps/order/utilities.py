@@ -9,19 +9,27 @@ from apps.cart.cart import Cart
 
 from .models import Order, OrderItem
 
-def checkout(request, first_name, last_name, email, location, phone ):
-    order = Order(first_name=first_name, last_name=last_name, email=email, location=location, phone=phone)
+def checkout(request, first_name, last_name, email, address, phone):
     
+
+    order = Order(first_name=first_name, last_name=last_name, email=email, address=address, phone=phone)
     if request.user.is_authenticated:
         order.user = request.user
+        order.address = request.user.userprofile.address
+        order.phone = request.user.userprofile.phone
 
+        
+       
+    
+    
+        
     order.save()
 
     cart = Cart(request)
 
     for item in cart:
-        OrderItem.objects.create(order=order, product=item['product'], price=item['price'], quantity=item['quantity'])
-
+        OrderItem.objects.create(order=order, product=item['product'],vendor=item['product'].vendor, price=item['price'], quantity=item['quantity'])
+        order.vendors.add(item['product'].vendor)
     return order.id
 '''def checkout(request, first_name, last_name, email, location, phone, code, amount):
     order = Order.objects.create(first_name=first_name, last_name=last_name, email=email, location=location, phone=phone, code=code, paid_amount=amount)
@@ -39,7 +47,7 @@ def notify_vendor(order):
         message = Mail(
             from_email = settings.DEFAULT_EMAIL_FROM,
             to_emails = vendor.created_by.email,
-            subject='You have a new order!  Kindly request for the Mpesa Confirmation Code upon delivery for payment processin.',
+            subject='You have a new order!',
             html_content = render_to_string('order/email_notify_vendor.html', {'order': order, 'vendor': vendor}))
         try:
             sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
@@ -48,7 +56,7 @@ def notify_vendor(order):
             print(response.body)
             print(response.headers)
         except Exception as e:
-            print('Error! Please try again. Use the same payment code and try again. If unsuccessful expect a refund in 10 mins.')
+            print('Error! Order not successful. Please try again.')
         
 
 
@@ -56,7 +64,7 @@ def notify_customer(order):
     message = Mail(
         from_email = settings.DEFAULT_EMAIL_FROM,
         to_emails=order.email,
-        subject='Thank you for the order! Kindly avail the Mpesa Confirmation Code i.e QCTXXXXX91 to the Vendor upon delivery, if requested.',
+        subject='Thank you for the order!',
         html_content = render_to_string('order/email_notify_customer.html', {'order': order}))
     try:
         sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
@@ -65,6 +73,6 @@ def notify_customer(order):
         print(response.body)
         print(response.headers)
     except Exception as e:
-        print('Error! Please try again. Use the same payment code and try again. If unsuccessful expect a refund shortly.')
+        print('Error! Please try again.')
     
     

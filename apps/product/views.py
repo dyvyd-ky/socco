@@ -1,3 +1,6 @@
+from django.shortcuts import render
+from django.http import HttpResponse
+
 import random
 
 from django.contrib import messages
@@ -71,3 +74,5 @@ def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
 
     return render(request, 'product/category.html', {'category': category})
+
+

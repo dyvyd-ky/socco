@@ -1,4 +1,4 @@
-import stripe 
+
 
 from django.conf import settings
 from django.contrib import messages
@@ -24,17 +24,17 @@ def cart_detail(request):
         first_name = request.user.first_name
         last_name = request.user.last_name
         email = request.user.email
-        location = request.user.userprofile.location
+        address = request.user.userprofile.address
         phone = request.user.userprofile.phone
     else:
-        first_name = last_name = email = location = phone = ''
+        first_name = last_name = email = address = phone = ''
 
     context = {
         'cart': cart,
         'first_name': first_name,
         'last_name': last_name,
         'email': email,
-        'location': location,
+        'address': address,
         'phone': phone,
         
         'productsstring': productsstring.rstrip(',')
@@ -46,4 +46,4 @@ def success(request):
     cart = Cart(request)
     cart.clear()
     
-    return render(request, 'success.html')
+    return render(request, 'cart/success.html')

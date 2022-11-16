@@ -1,7 +1,7 @@
 
 from django.shortcuts import render
 from apps.product.models import Product
-from interiorshop.settings import DEFAULT_EMAIL_FROM
+from versone.settings import DEFAULT_EMAIL_FROM
 from .forms import ContactForm
 
 from django.conf import settings
