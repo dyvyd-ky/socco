@@ -6,8 +6,8 @@ except ImportError:
 DEBUG = False
 ALLOWED_HOSTS = ['www.sokonisoko.com', 'sokonisoko.com']
 
-AWS_ACCESS_KEY_ID = '4OA4PHKRAQH2LQ4KHG7I'
-AWS_SECRET_ACCESS_KEY = 'LjbKr8NajlS1LJ7o6XrrAb1tr7mLYrqOMcyaxJcXVw8'
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 
 AWS_STORAGE_BUCKET_NAME = 'elytteky'
 AWS_S3_ENDPOINT_URL = 'https://elytteky.sgp1.digitaloceanspaces.com'
