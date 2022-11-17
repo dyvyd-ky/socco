@@ -4,7 +4,7 @@ except ImportError:
     pass
 
 DEBUG = False
-ALLOWED_HOSTS = ['www.sokonisoko.com', 'sokonisoko.com']
+ALLOWED_HOSTS = ['www.sokonisoko.com', 'sokonisoko.com', '128.199.222.115']
 
 
 DATABASES = {
