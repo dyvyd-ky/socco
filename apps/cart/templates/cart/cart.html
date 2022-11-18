@@ -5,7 +5,7 @@
 {% block content %}
 <div>
     <div id="cartapp" class="container pt-3">
-        <a href="/" class="btn bg-lightt text-light font-weight-bold mb-2 ml-2">continue shopping</a>
+        <a href="/" class="btn bg-secondary text-light font-weight-bold mb-2 ml-2">&#x2190; continue shopping</a>
 
         {% if cart %}
             <div v-if="products.length > 0" class="shadow px-3 pb-2">
@@ -62,8 +62,8 @@
                 
 
                 <div class="container">
-                    <div class="bg-danger col-md-4">
-                        <h2 class="text-light px-2">Contact Information</h2>
+                    <div class="bg-dangerr col-md-4 rounded">
+                        <h2 class="text-center text-light px-2">Contact Information</h2>
                     </div>
                     <div class="col-md-4 shadow mb-3 pb-3">
                     
@@ -100,15 +100,15 @@
                         </div>
                     
                         <div class="col-md-12 font-weight-bold">
-                            <label>phone</label>
+                            <label>Mpesa phone number</label>
 
                             <div class="control">
                                 <input class="input" type="text" name="phone" v-model="phone">
                             </div>
                         </div>
-                        <div class="field">
+                        <div class="field col-md-12 my-3">
                             <div class="control">
-                                <button class="btn btn-success" v-on:click="buy('mpesa')">Lipa na Mpesa</button>
+                                <button class="btn btn-success font-weight-bold" v-on:click="buy('mpesa')">Lipa na Mpesa</button>
                         
                             </div>
                         </div>

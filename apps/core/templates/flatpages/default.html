@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+{% load flatpages %}
+
+{% block content %}
+
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <h2>{{ flatpage.title }}</h2>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    {{ flatpage.content }}
+  </div>
+
+{% endblock %}

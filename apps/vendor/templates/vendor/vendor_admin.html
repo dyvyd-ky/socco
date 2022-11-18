@@ -3,7 +3,7 @@
 
 
 {% block content %}
-<div class="container shadow5 py-3">
+<div class="container border border-outline py-3">
     <div class="card py-3 bg-dangerr text-light pl-2">    
         <h4>Account:-  {{ vendor.business_name }}</h4>            
        <span>
@@ -13,7 +13,7 @@
         
         <span>
             <a href="{% url 'edit_vendor'%}" class="btn bg-warning text-light font-weight-bold">Edit your info</a>
-            <a href="{% url 'logout' %}" class="btn btn-danger ml-2">Log out</a>    
+            <a href="{% url 'logout' %}" class="btn btn-outline-light ml-2">Log out</a>    
         </span>
         
         
@@ -21,8 +21,8 @@
     </div>
  
     <div class="container py-3 mt-3" style="overflow-x:auto;">
-        <h3 class="bg-dangerr text-light text-center col-md-5"> My products</h3>  
-            <a href="{% url 'add_product' %}" class="btn btn-danger float-right">Add product</a>
+        <h3 class="bg-dangerr text-light text-center col-md-3 rounded"> MY PRODUCTS</h3>  
+            <a href="{% url 'add_product' %}" class="btn bg-dangerr text-light float-right">Add product</a>
               
         {% if products %}
             <table class="table">
@@ -54,7 +54,7 @@
                 </tbody>
             </table>
         {% else %}
-        <h3 class="bg-secondary text-light col-md-5">You don't have any products yet.</h3>
+        <h3 class="bg-secondary text-light col-md-6 rounded">You don't have any products yet.</h3>
         {% endif %}
     </div>
 <hr>
@@ -62,7 +62,7 @@
         
     
         {% if orders %}
-        <h3 class="bg-dangerr text-light text-center col-md-5">My orders</h3>
+        <h3 class="bg-dangerr text-light text-center col-md-3 rounded">MY ORDERS</h3>
             {% for order in orders %}
                 <div class="{% if order.fully_paid %}bg-warning-light{% else %}bg-info-light{% endif %} mb-2 p-4"
                 style="border-radius: 20px;">
@@ -72,9 +72,9 @@
                         
     
                         <div class="col-md-12" style="overflow-x:auto;">
-                            <b>Name:</b> {{ order.first_name }} {{ order.last_name }}<br>
-                            <b>Location:</b> {{ order.address }}<br>
-                            <b>E-mail:</b> {{ order.email }}<br>
+                            <b>Name:</b> {{ order.first_name }} {{ order.last_name }}
+                            <b>Location:</b> {{ order.address }}
+                            <b>E-mail:</b> {{ order.email }}
                             <b>Phone:</b> {{ order.phone }}
     
                             <table class="table mt-4">
@@ -107,7 +107,7 @@
                 </div>
             {% endfor %}
         {% else %}
-            <h3 class="bg-secondary text-light col-md-5">You don't have any orders yet.</h3> 
+            <h3 class="bg-secondary text-light col-md-6 rounded">You don't have any orders yet.</h3> 
         {% endif %}
     </div>
 </div>

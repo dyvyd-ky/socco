@@ -1,23 +1,29 @@
 {% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container">
-    <div class="col-md-12 shadow">
-        <h1 class="title">Sign up</h1>
-
-        <form method="post" action=".">
-            {% csrf_token %}
     
-            {{ form.as_p }}
+        <div class="col-md-8 card">
+            <h1 class="card-header text-danger">Signup</h1>
+            <p class="text-success"><b>Note: </b>We only accept Lipa na Mpesa for payments. 
+                Make sure to include your mpesa phone number for automated payment requests.
+            </p>
 
-            {{ userprofile.as_p}}
-    
-            <div class="field">
-                <div class="control">
-                    <button class="btn btn-danger">SignUp</button>
+            <form method="post" action=".">
+                {% csrf_token %}
+        
+                {{ form|crispy }}
+
+                {{ userprofile|crispy}}
+        
+                <div class="field">
+                    <div class="control">
+                        <button class="btn bg-danger text-light my-2">Signup</button>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    
 </div>
 {% endblock %}

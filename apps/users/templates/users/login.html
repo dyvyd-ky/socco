@@ -1,43 +1,44 @@
 {% extends 'core/base.html' %}
-
 {% block content %}
 <div class="container">
-    <div class="col-md-4 bg-lightt shadow pb-3 pt-3" style="border-radius: 15px;">
-        <h1 class="text-light">Login</h1>
+    <center>
+        <div class="col-md-4 card pb-3 pt-3" style="border-radius: 15px;">
+            <h3 class="card-header text-danger">Log In</h3>
 
-        <form method="post" action=".">
-            {% csrf_token %}
-    
-            <input type="hidden" name="next" value="{{ next }}">
-    
-            <div class="field text-light">
-                <label>Username</label>
-    
-                <div clas="control">
-                    <input type="text" class="input" name="username" id="id_username">
+            <form method="post" action=".">
+                {% csrf_token %}
+        
+                <input type="hidden" name="next" value="{{ next }}">
+        
+                <div class="field">
+                    <label>Username</label>
+        
+                    <div clas="control">
+                        <input type="text" class="input" name="username" id="id_username">
+                    </div>
                 </div>
-            </div>
-    
-            <div class="field text-light">
-                <label>Password</label>
-                
-                <div clas="control">
-                    <input type="password" class="input" name="password" id="id_password">
+        
+                <div class="field">
+                    <label>Password</label>
+                    
+                    <div clas="control">
+                        <input type="password" class="input" name="password" id="id_password">
+                    </div>
                 </div>
-            </div>
-    
-            {% if form.errors %}
-                <div class="notification is-danger">
-                    Your username and password didn't match! Please try again!
+        
+                {% if form.errors %}
+                    <div class="notification is-danger">
+                        Your username and password didn't match! Please try again!
+                    </div>
+                {% endif %}
+        
+                <div class="field">
+                    <div class="control">
+                        <button class="btn bg-danger btn-sm text-light mt-3">Login</button>
+                    </div>
                 </div>
-            {% endif %}
-    
-            <div class="field">
-                <div class="control">
-                    <button class="btn btn-light btn-sm mt-3">Login</button>
-                </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    </center>
 </div>
 {% endblock %}

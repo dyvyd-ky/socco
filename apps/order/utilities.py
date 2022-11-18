@@ -15,8 +15,8 @@ def checkout(request, first_name, last_name, email, address, phone):
     order = Order(first_name=first_name, last_name=last_name, email=email, address=address, phone=phone)
     if request.user.is_authenticated:
         order.user = request.user
-        order.address = request.user.userprofile.address
-        order.phone = request.user.userprofile.phone
+        #order.address = request.user.userprofile.address
+        #order.phone = request.user.userprofile.phone
 
         
        
