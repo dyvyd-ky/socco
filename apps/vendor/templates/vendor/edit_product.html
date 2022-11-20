@@ -1,23 +1,26 @@
 {% extends 'core/base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}Edit product | {% endblock %}
 
 {% block content %}
-<div class="container my-3 shadow col-md-6">
-    <h1 class="title">Edit product</h1>
+<div class="container">
+    <h1 class=" col-md-6 text-center text-light bg-dangerr rounded">Edit Product</h1>
+    <div class="my-3 shadow col-md-6">
+    
 
-    <form method="post" action="." enctype="multipart/form-data">
-        {% csrf_token %}
+        <form method="post" action="." enctype="multipart/form-data">
+            {% csrf_token %}
 
-        {{ form.as_p }}
+            {{ form|crispy }}
 
-        <div class="field">
-            <div class="control">
-                <button class="btn btn-danger">Save changes</button>
+            <div class="field">
+                <div class="control">
+                    <button class="btn btn-danger my-2">Save changes</button>
+                </div>
             </div>
-        </div>
-    </form>
-    <h2>Other Images</h2>
+        </form>
+    </div>
+    <!--h2>Other Images</h2>
     <form method="post" action="." enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -28,6 +31,6 @@
                 <button class="btn btn-danger mb-3">Add Images</button>
             </div>
         </div>
-    </form>
+    </form-->
 </div>
 {% endblock %}

@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from django.shortcuts import render, redirect, get_object_or_404
 
 from apps.product.views import product
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from .models import Vendor
 from apps.product.models import Product, ProductImage
@@ -40,6 +40,7 @@ def vendor_admin(request):
             for item in order.items.all():
                 if item.vendor == request.user.vendor:
                     if item.vendor_paid:
+                        
                         order.vendor_paid_amount += item.get_total_price()
                     else:
                         order.vendor_amount += item.get_total_price()
@@ -76,14 +77,14 @@ def edit_product(request, pk):
 
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)
-        image_form = ProductImageForm(request.POST, request.FILES)
+        #image_form = ProductImageForm(request.POST, request.FILES)
 
-        if image_form.is_valid():
+        '''if image_form.is_valid():
             productimage = image_form.save(commit=False)
             productimage.product = product
             productimage.save()
 
-            return redirect('vendor_admin')
+            return redirect('vendor_admin')'''
 
         if form.is_valid():
             form.save()
@@ -91,9 +92,9 @@ def edit_product(request, pk):
             return redirect('vendor_admin')
     else:
         form = ProductForm(instance=product)
-        image_form = ProductImageForm()
+        #image_form = ProductImageForm()
     
-    return render(request, 'vendor/edit_product.html', {'form': form, 'image_form': image_form, 'product': product})
+    return render(request, 'vendor/edit_product.html', {'form': form, 'product': product})
 
 @login_required
 def edit_vendor(request):
@@ -124,7 +125,7 @@ def vendor(request, vendor_id):
 
     return render(request, 'vendor/vendor.html', {'vendor': vendor})
 
-class ProductDeleteView(LoginRequiredMixin,DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     success_url = '/'
     
