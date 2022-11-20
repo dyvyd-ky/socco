@@ -3,8 +3,8 @@
 {% block title %}Edit vendor | {% endblock %}
 
 {% block content %}
-<div class="container shadow col-md-6 my-3">
-    <h1 class="font-weight-light">Edit your Info</h1>
+<div class="container shadow bg-light col-md-6 my-3">
+    <h1 class="col-md-12 bg-dangerr rounded text-light text-center">Edit your Info</h1>
 
     <form method="POST" action="." enctype="multipart/form-data">
         {% csrf_token %}
@@ -14,7 +14,7 @@
         </fieldset>
 
         <div class="form-group">    
-            <button class="btn btn-danger mb-3" type="submit">Save changes</button>
+            <button class="btn btn-danger mb-3 font-weight-bold" type="submit">Save changes</button>
         </div>
     </form>
 </div>

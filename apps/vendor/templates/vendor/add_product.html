@@ -3,10 +3,10 @@
 {% block title %}Add product | {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class=" col-md-6 text-center text-light bg-dangerr rounded">Add product</h1>
-    <div class="col-md-6 shadow">
-        
+<div class="container d-flex justify-content-center">
+    
+    <div class="col-md-6 bg-light shadow">
+        <h1 class=" col-md-12 text-center text-light bg-dangerr rounded">Add product</h1>
 
         <form method="post" action="." enctype="multipart/form-data">
             {% csrf_token %}
@@ -15,7 +15,7 @@
 
             <div class="field">
                 <div class="control">
-                    <button class="btn btn-danger mt-2">Submit</button>
+                    <button class="btn btn-danger my-2">Submit</button>
                 </div>
             </div>
         </form>

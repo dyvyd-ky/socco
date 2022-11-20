@@ -6,7 +6,7 @@ from apps.vendor.models import Vendor
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'thumbnail', 'image', 'title','slug', 'description', 'price']
+        fields = ['category', 'thumbnail', 'image', 'title','slug', 'description','num_available', 'price']
 
 class ProductImageForm(ModelForm):
     class Meta:
