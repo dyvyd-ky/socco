@@ -288,7 +288,10 @@ p {
 
 
 .bg-lightt {
-    background-image: linear-gradient(to left, #ff3860, #FAA0A0, orange, red, salmon, orange, red);
+    background-image: linear-gradient(to left, #ff3860, #FAA0A0, orange, rgb(255, 0, 72), salmon, orange, rgb(255, 0, 72));
+}
+.bg-red {
+    background-color: rgb(255, 0, 72);
 }
 .comment {
     color: #d3d3d3;
