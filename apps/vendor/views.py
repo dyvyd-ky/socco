@@ -9,10 +9,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from .models import Vendor
 from apps.product.models import Product, ProductImage
+from apps.order.models import Order, OrderItem
+
 
 from .forms import ProductForm, ProductImageForm, VendorForm
 
-'''def become_vendor(request):
+def become_vendor(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
 
@@ -23,7 +25,7 @@ from .forms import ProductForm, ProductImageForm, VendorForm
     else:
         form = UserCreationForm()
 
-    return render(request, 'vendor/become_vendor.html', {'form': form})'''
+    return render(request, 'vendor/become_vendor.html', {'form': form})
 
 @login_required
 def vendor_admin(request):
@@ -31,22 +33,23 @@ def vendor_admin(request):
         vendor = request.user.vendor
         products = vendor.products.all()
         orders = vendor.orders.all()
+        paid_amount=0
+        balance = 0
+        
+        
 
         for order in orders:
-            order.vendor_amount = 0
-            order.vendor_paid_amount = 0
             order.fully_paid = True
-
             for item in order.items.all():
                 if item.vendor == request.user.vendor:
-                    if item.vendor_paid:
-                        
-                        order.vendor_paid_amount += item.get_total_price()
-                    else:
-                        order.vendor_amount += item.get_total_price()
+                    if item.vendor_paid == True:
+                        paid_amount += item.get_total_price()
+                    else:    
+                        balance += item.get_total_price()
                         order.fully_paid = False
-                            
-        return render(request, 'vendor/vendor_admin.html', {'vendor': vendor, 'products': products, 'orders': orders})
+
+      
+        return render(request, 'vendor/vendor_admin.html', {'vendor': vendor, 'products': products, 'orders': orders, 'paid_amount':paid_amount, 'balance':balance})
     except:
         pass
         return redirect('/')
@@ -117,6 +120,7 @@ def edit_vendor(request):
 
 def vendors(request):
     vendors = Vendor.objects.all()
+    
 
     return render(request, 'vendor/vendors.html', {'vendors': vendors})
 
@@ -135,5 +139,13 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
+'''@login_required
+def delete_product(request, pk):
+    product = Product.objects.filter(user=request.user).get(pk=pk)
+    #product.status = Product.DELETED
+    product.save()
 
+    #messages.success(request, 'The product was deleted!')
 
+    return redirect('/')
+'''

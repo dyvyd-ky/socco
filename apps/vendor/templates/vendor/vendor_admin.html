@@ -3,110 +3,109 @@
 
 
 {% block content %}
-<div class="container shadow bg-light py-3" style="border-radius: 70px;">
-    <div class="col-md-12 bg-light d-flex justify-content-center">    
-        <div class=" card col-md-5 shadow py-3 bg-light px-3">
-            <img class="img-fluid rounded mr-2 col-md-5" src="{{ vendor.profile_pic.url }}"> 
-            <h4 class="font-weight-bold">{{ vendor.business_name }}</h4>   
-            <span><strong>My balance: </strong>KSh {{ vendor.get_balance }}<br></span>
-            <!--strong>Paid amount: </strong>KSh {{ vendor.get_paid_amount }} -->   
-            <span>
-                <a href="{% url 'edit_vendor'%}" class="btn bg-warning font-weight-bold text-light">Edit your info</a>
-                <a href="{% url 'logout' %}" class="btn btn-danger ml-2">Log out</a>    
-            </span>
-        
-        </div>
-              
-    </div>
- 
-    <div class="container py-3 mt-3" style="overflow-x:auto;">
-        <h3 class="bg-dangerr text-light text-center col-md-3 rounded"> My Products</h3>  
-        <a href="{% url 'add_product' %}" class="btn bg-warning text-light font-weight-bold mb-2 px-2 right">Add product</a>            
-        {% if products %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Price</th>
-                        <th>Actions</th>
-                        
+<div class="container shadow py-3" style="border-radius: 15px;">
+    
+    <div class="col-md-12">    
+        <div class="row">  
+            <div class="col-md-3">
+                <div class="py-3 px-3 shadow" style="border-radius: 13px;">
 
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for product in products %}
-                        <tr>
-                            <td>
-                                <img class="cart-image" src="{{ product.get_thumbnail }}">
-                            </td>
-                            <td><a class="text-dark font-weight-bold" href="{% url 'product' product.category.slug product.slug %}">{{ product.title }}</a></td>
-                            <td>KSh {{ product.price }}</td>
-                            <td><a class="btn btn-warning btn-sm mt-1 mb-1 text-light font-weight-bold" href="{% url 'edit_product' product.id %}">Edit</a>
-                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'delete' product.slug %}">Delete</a></td>
-                            
-
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-        <p class="bg-secondary text-light col-md-3 rounded">You don't have any products.</p>
-        {% endif %}
-    </div>
-<hr>
-    <div class="container mt-3">
-        
-    
-        {% if orders %}
-        <h3 class="bg-warning text-light text-center col-md-3 rounded">MY ORDERS</h3>
-            {% for order in orders %}
-                <div class="{% if order.fully_paid %}bg-warning-light{% else %}bg-info-light{% endif %} mb-2 p-4"
-                style="border-radius: 30px;">
-                    <div class="container">
-                        
-                            <h3 class="">#{{ order.id }} - {{ order.first_name }} {{ order.last_name }}</h3>
-                        
-    
-                        <div class="col-md-12" style="overflow-x:auto;">
-                            <b>Name:</b> {{ order.first_name }} {{ order.last_name }}
-                            <b>Location:</b> {{ order.address }}
-                            <b>E-mail:</b> {{ order.email }}
-                            <b>Phone:</b> {{ order.phone }}
-    
-                            <table class="table mt-4">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Paid</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-    
-                                <tbody>
-                                    {% for item in order.items.all %}
-                                        {% if item.vendor == request.user.vendor %}
-                                            <tr>
-                                                <td>{{ item.product.title }}</td>
-                                                <td>KSh {{ item.product.price }}</td>
-                                                <td>{{ item.quantity }}</td>
-                                                <td>{{ item.vendor_paid|yesno:"Yes,No" }}</td>
-                                                <td>KSh {{ item.get_total_price }}</td>
-                                            </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                        <img class="img-fluid rounded mr-2" src="{{ vendor.profile_pic.url }}"> 
+                        <h4 class="font-weight-bold">{{ vendor.business_name }}</h4>   
+                        <span><strong>My balance: </strong>KSh {{ balance }}<br></span>
+                        <strong>Paid amount: </strong>KSh {{ paid_amount }}
+                        <span>
+                            <a href="{% url 'edit_vendor'%}" class="btn btn-danger font-weight-bold">Edit your info</a>
+                            <a href="{% url 'logout' %}" class="btn bg-info-light text-danger">Log out</a>    
+                        </span>
+                
                 </div>
-            {% endfor %}
-        {% else %}
-            <p class="bg-secondary text-light col-md-3 rounded">You don't have any orders yet.</p> 
-        {% endif %}
+            </div>
+            <div class="col-md-9 py-3 mt-3 shadow1" style="border-radius: 12px;">
+           
+                <div class="row mx-2"><h3 class="rounded col-md-4 text-center shadow"> My Products</h3>
+                    <a href="{% url 'add_product' %}" class="btn btn-danger btn-sm font-weight-bold mb-2 ml-2">Add product</a> 
+                </div>    
+                
+                 
+                        {% if products %}
+                        <div class="flex-container">     
+                            {% for product in products %}
+                                <div class="col-md-3 my-2">
+                                    <div class="bg-light shadow1 rounded pb-1">
+                                        <img class="vendor-item-img img-fluid" src="{{ product.get_thumbnail }}">
+                                        <p class="text-center"><a class="text-dark font-weight-bold" href="{% url 'product' product.category.slug product.slug %}">{{ product.title }}</a>
+                                        KSh {{ product.price }} <br>
+                                        <a class="badge bg-dangerr text-light font-weight-bold pl-2" href="{% url 'edit_product' product.id %}">Edit</a>
+                                        <a class="badge bg-warning-light text-danger pr-2" href="{% url 'delete' product.slug %}">Delete</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>  
+                {% else %}
+                <p class="bg-secondary text-light col-md-3 rounded">You don't have any products.</p>
+                {% endif %}
+                
+            </div>
+                
+        </div>
+    </div>
+
+<hr>
+        <div class="container mt-3">
+            
+        
+            {% if orders %}
+            <h3 class="text-center col-md-3 rounded shadow mb-3">My Orders</h3>
+                {% for order in orders %}
+                    
+                        <div class="container col-md-10 mb-3 {% if order.fully_paid %}bg-warning-light atext {% else %}bg-info-light text-secondary{% endif %} shadow" style="border-radius: 15px;">
+                            
+                                <h3 class="">#{{ order.id }} - {{ order.first_name }} {{ order.last_name }}</h3>
+                            
+        
+                            <div class="col-md-12" style="overflow-x:auto;">
+                                <b>Name:</b> {{ order.first_name }} {{ order.last_name }}
+                                <b>Location:</b> {{ order.address }}
+                                <b>E-mail:</b> {{ order.email }}
+                                <b>Phone:</b> {{ order.phone }}
+        
+                                <table class="table mt-4">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Price</th>
+                                           
+                                            <th>Quantity</th>
+                                            <th>Paid</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+        
+                                    <tbody>
+                                        {% for item in order.items.all %}
+                                            {% if item.vendor == request.user.vendor %}
+                                                <tr>
+                                                    <td>{{ item.product.title }}</td>
+                                                    <td>KSh {{ item.product.price }}</td>
+                                                    
+                                                    <td>{{ item.quantity }}</td>
+                                                    <td>{{ item.vendor_paid|yesno:"Yes,No" }}</td>
+                                                    <td>KSh {{ item.get_total_price }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    
+                {% endfor %}
+            {% else %}
+                <p class="bg-secondary text-light col-md-3 rounded">You don't have any orders yet.</p> 
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

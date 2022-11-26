@@ -4,16 +4,16 @@
 
 {% block content %}
 <div class="container-fluid shadow py-3" id="listapp">
-        <div class="container-fluid1">
-            <div class="bg-lightt col-md-12 d-flex justify-content-center shadow3">
-                <div class="col-md-5">
-                    <img src="{{ category.get_thumbnail }}" class="col-md-12 img-fluid">
+       
+            <div class="col-md-12 d-flex justify-content-center">
+                
+                    <p class="text-center">{{ category.display | safe  }}</p>
                     <div class="text-block">
-                        <h2 class="font-weight-bold bg-danger px-3 text-light" style="border-radius: 5px;">{{ category.title }}</h2>
+                        <h4 class="font-weight-bold bg-dangerr px-3 text-light" style="border-radius: 5px;">{{ category.title }}</h4>
                     </div>
-                </div>
+                
             </div>
-        </div>
+
     <div class="flex-container">
         {% for product in category.products.all %}
             {% include 'product/parts/list_item.html' %}

@@ -24,7 +24,7 @@ body {
     box-shadow: inset 1px -6px 26px -4px rgb(167, 167, 167);
 }
 .shadow1 {
-    box-shadow: -1px 0px 10px 1px rgb(167, 167, 167);
+    box-shadow: -1px 0px 10px 1px #d1d1d1;
 }
 
 .shadow4 {
@@ -97,7 +97,10 @@ p {
 .atext {
     color: #000;
 }
-
+atext:hover {
+	color: orange;
+    text-decoration: none;
+}
 
 .text-danger {
     color: #ff3860;
@@ -158,18 +161,18 @@ p {
 
 
 .bg-warning-light {
-    background-color: #abff74
+    background-color: 	papayawhip;
 }
 
 .bg-info-light {
-    background-color: #f0f0f0;
+    background-color: 	#FFFDD0;
 }
 
 .bg-info-secc {
     background-color: #fff9c1;
 }
 .bg-info-sec {
-    background-color: #f0f0f0;
+    background-color: #f1ffc2;
 }
 .badge-danger {
     background-color: #ff3860;
@@ -196,8 +199,10 @@ p {
     text-align: center;
     padding-inline-start: 5px;
     padding-inline-end: 5px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     
 }
+
 
 .list-group-item {
 	background-color: #f8f8f8!important;
@@ -291,8 +296,13 @@ p {
     background-image: linear-gradient(to left, #ff3860, #FAA0A0, orange, rgb(255, 0, 72), salmon, orange, rgb(255, 0, 72));
 }
 .bg-red {
-    background-color: rgb(255, 0, 72);
+    background-color: rgb(255, 0, 72); 
 }
+
+.bg-or {
+    background-color: rgb(255, 228, 93);
+}
+
 .comment {
     color: #d3d3d3;
 }
@@ -439,6 +449,12 @@ p {
     height: 100%;
 }
 
+.vendor-item-img {
+    width: 100%;
+    height: 120px;
+}
+
+
 @media only screen and (max-width: 1200px) {
 
     .thumbnail{
@@ -455,6 +471,10 @@ p {
         background-color: #ff3860;
         text-align: center;
         
+    }
+    .vendor-item-img {
+        width: 100%;
+        height: 100%;
     }
 
 }
