@@ -11,14 +11,19 @@
                 <h5>
                     <a class="atext font-weight-bold" href="{% url 'product' product.category.slug product.slug %}"> {{ product.title }}</a></h5>
                     
-                    <h6 class="">
-                        KShs {{ product.price }}
+                    
+                        
+                    <h6> KSh {{ product.get_product_price }} 
+                        {% if product.discount %}
+                        <del class="font-weight-light text-secondary">KSh {{ product.price }}</del>
+                        {% endif %}
+                        
                     </h6> 
                    <a href="{% url 'category' product.category.slug %}" class="bg-light font-weight-bold px-1">{{ product.category }}</a> 
                     <p>{{ product.description | safe | slice:":70" }} ... </p>
                     <div class="card-footer">
                         {% if product.in_cart %}
-                            <a href="{% url 'cart' %}" class="btn btn-success">Go to Cart</a>
+                            <a href="{% url 'cart' %}" class="badge badge-success cart">Go to Cart</a>
                         {% else %}
                             {% if product.num_available > 0 %}
                                 <a @click="addToCart({{ product.id }})" class="badge badge-danger text-light" 

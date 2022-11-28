@@ -9,9 +9,22 @@ from django.template.loader import render_to_string
 
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from django.shortcuts import render, get_object_or_404
+
+from apps.cart.cart import Cart
 
 def frontpage(request):
     newest_products = Product.objects.all()[0:16]
+    for product in newest_products:
+    
+        cart = Cart(request)
+        if cart.has_product(product.id):
+            product.in_cart = True
+        else:
+            product.in_cart = False
+
+    
+
 
     return render(request, 'core/frontpage.html', {
         'newest_products': newest_products

@@ -49,6 +49,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='items', on_delete=models.DO_NOTHING)
     price = models.FloatField()
+    discount = models.FloatField(blank=True, null=True)
     quantity = models.IntegerField(default=1)
     vendor = models.ForeignKey(Vendor, related_name='items', on_delete=models.CASCADE)
     vendor_paid = models.BooleanField(default=False)
@@ -58,5 +59,17 @@ class OrderItem(models.Model):
     
     def get_total_price(self):
         return self.price * self.quantity
+    
+    def get_total_discount_item_price(self):
+        return self.quantity * self.discount
+
+    def get_amount_saved(self):
+        return self.get_total_price() - self.get_total_discount_item_price()
+
+    def get_final_price(self):
+        if self.discount:
+            return self.get_total_discount_item_price()
+        return self.get_total_price()
+
 
     

@@ -24,18 +24,22 @@
                             
                             <div class="col-md-4">    
                                     <h3 class="font-weight-bold">{{ product.title }}</h3>
-                                    <h6 class="text-black">
-                                        KSh {{ product.price }}                                  
-                                    </h6>    
+                                    <h6> KSh {{ product.get_product_price }} 
+                                        {% if product.discount %}
+                                        <del class="font-weight-light text-secondarys">KSh {{ product.price }}</del>
+                                        {% endif %}
+                                        
+                                    </h6>                           
+                                      
                                     
                                     <p class="mt-2"><strong>Description: </strong> {{ product.description | safe}}</p>   
                                  
 
                                     {% if product.in_cart %}
-                                        <a href="{% url 'cart' %}" class="btn bg-danger text-light font-weight-bold">Item already in cart! Go to Cart</a>
+                                        <a href="{% url 'cart' %}" class="btn bg-success text-light font-weight-bold">Item already in cart! Go to Cart</a>
                                     {% else %}
                                         {% if product.num_available > 0 %}
-                                        <a @click="addToCart({{ product.id }})" class="badge badge-danger text-light" 
+                                        <a href="" @click="addToCart({{ product.id }})" class="badge badge-danger text-light" 
                                             onclick="myFunction()">Add to cart</a>
                                             <div id="snackbar">Item added to Cart!</div>
                                         {% else %}
@@ -51,7 +55,7 @@
                             <div class="col-md-2">
                                 <div class="card mt-3">
                                     <a href="{% url 'vendor' product.vendor.id %}"> 
-                                        <h6 class="font-weight-bold py-2 text-center text-light card-header bg-lightt">{{ product.vendor.business_name }}'s Store</h6>   
+                                        <h6 class="font-weight-bold py-2 text-center text-light card-header bg-secondary">{{ product.vendor.business_name }}'s Store</h6>   
                                         <img class="img-fluid card-body" src="{{product.vendor.profile_pic.url}}">
                                         
                                     </a>

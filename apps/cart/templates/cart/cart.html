@@ -5,7 +5,7 @@
 {% block content %}
 <div>
     <div id="cartapp" class="container pt-3">
-        <a href="/" class="btn btn-warning font-weight-bold mb-2 ml-2">&#x2190; continue shopping</a>
+        <a href="/" class="btn btn-warning text-light font-weight-bold mb-2 ml-2">&#x2190; continue shopping</a>
 
         {% if cart %}
             <div v-if="products.length > 0" class="shadow px-3 pb-2">
@@ -34,7 +34,7 @@
                                 </td>
                                 <td><a class="badge bg-dangerr text-light px-2" @click="decrementQuantity(product.id, product.quantity, product.price)">-</a> [[ product.quantity ]] <a class="badge badge-warning text-light px-2" @click="incrementQuantity(product.id, product.quantity, product.price)">+</a></td>
                                 <td>[[ product.total_price ]]</td>
-                                <td><a @click="removeFromCart(product.id)" class="badge badge-secondary text-light">Remove</a></td>
+                                <td><a href="{% url 'cart' %}" @click="removeFromCart(product.id)" class="badge badge-secondary text-light">Remove</a></td>                            
                             </tr>
                         </tbody>
 

@@ -56,6 +56,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255)
     description = models.TextField(max_length=300, blank=True, null=True)
     price = models.FloatField()
+    discount = models.FloatField(blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
     thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True)
@@ -101,6 +102,12 @@ class Product(models.Model):
             return total / self.reviews.count()
         else:
             return 0
+        
+    
+    def get_product_price(self):
+        if self.discount:
+            return self.price - self.discount
+        return self.price
 
 class ProductReview(models.Model):
     product = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)

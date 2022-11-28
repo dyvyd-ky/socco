@@ -35,7 +35,9 @@
                                     <div class="bg-light shadow1 rounded pb-1">
                                         <img class="vendor-item-img img-fluid" src="{{ product.get_thumbnail }}">
                                         <p class="text-center"><a class="text-dark font-weight-bold" href="{% url 'product' product.category.slug product.slug %}">{{ product.title }}</a>
-                                        KSh {{ product.price }} <br>
+                                        
+                                        KSh {{ product.get_product_price }} <br>
+                                        
                                         <a class="badge bg-dangerr text-light font-weight-bold pl-2" href="{% url 'edit_product' product.id %}">Edit</a>
                                         <a class="badge bg-warning-light text-danger pr-2" href="{% url 'delete' product.slug %}">Delete</a>
                                         </p>
@@ -92,7 +94,7 @@
                                                     
                                                     <td>{{ item.quantity }}</td>
                                                     <td>{{ item.vendor_paid|yesno:"Yes,No" }}</td>
-                                                    <td>KSh {{ item.get_total_price }}</td>
+                                                    <td>KSh {{ item.get_final_price }}</td>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}

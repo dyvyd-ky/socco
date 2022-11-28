@@ -43,9 +43,9 @@ def vendor_admin(request):
             for item in order.items.all():
                 if item.vendor == request.user.vendor:
                     if item.vendor_paid == True:
-                        paid_amount += item.get_total_price()
+                        paid_amount += item.get_final_price()
                     else:    
-                        balance += item.get_total_price()
+                        balance += item.get_final_price()
                         order.fully_paid = False
 
       

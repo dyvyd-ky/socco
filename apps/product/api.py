@@ -35,14 +35,11 @@ def create_checkout_session(request):
 
     orderid = checkout(request, data['first_name'], data['last_name'], data['email'], data['address'], data['phone'])
 
-    total_price = 0
-    
     
     for item in cart:
         product = item['product']
-        
 
-        total_price = total_price + (int(product.price) * int(item['quantity']))
+        total_price = int(cart.get_total_cost())
         
 
         order = Order.objects.get(pk=orderid)
@@ -83,7 +80,7 @@ def create_checkout_session(request):
         
         order.save()
 
-    #
+    
 
     return JsonResponse({'session': session, 'order': payment_intent})
 
