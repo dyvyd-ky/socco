@@ -16,7 +16,7 @@
                         <div class="col-md-5 xx text-center"> 
                             
                             <h1 class="site-heading mt-3 text-white font-weight-bold text-center"> 
-                                 Bidhaa Bora kwa Bei Nafuu! </h1>
+                                 Bidhaa Bora, Bei Nafuu! </h1>
                             <p class="text-center text-white">@soko moto</p>
                                               
                                 
@@ -52,9 +52,10 @@
         <div class="container-fluid">
             <div class="flex-container bg-lightt pt-3 pl-3 mt-3" style="border-radius: 10px;">
                 {% for cat in menu_categories %}
-                <div class="cat-thumbnail text-center shadow6">
+                <div class="cat-thumbnail bg-red text-center">
                     <a href="{% url 'category' cat.slug %}" class="text-light font-weight-bold">{{cat.title}}
                         <img src="{{ cat.get_thumbnail }}" class="img-fluid">
+                        
                     </a> 
                 </div>
                 
