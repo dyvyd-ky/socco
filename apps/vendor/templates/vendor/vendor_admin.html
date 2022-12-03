@@ -62,7 +62,7 @@
             <h3 class="text-center col-md-3 rounded shadow mb-3">My Orders</h3>
                 {% for order in orders %}
                     
-                        <div class="container col-md-10 mb-3 {% if order.fully_paid %}bg-warning-light atext {% else %}bg-light text-secondary{% endif %} shadow" style="border-radius: 15px;">
+                        <div class="container col-md-10 mb-3 {% if order.fully_paid %}bg-warning-light {% else %}bg-light text-muted{% endif %} shadow" style="border-radius: 15px;">
                             
                                 <h3 class="">#{{ order.id }} - {{ order.first_name }} {{ order.last_name }}</h3>
                             
