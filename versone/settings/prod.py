@@ -75,7 +75,7 @@ MPESA_SHORTCODE_TYPE = 'till_number'
 MPESA_PASSKEY = env('MPESA_PASSKEY')
 # Username for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
 
-MPESA_INITIATOR_USERNAME = 'elytte'
+MPESA_INITIATOR_USERNAME = env('MPESA_INITIATOR_USERNAME')
 
 # Plaintext password for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
 
