@@ -22,8 +22,8 @@ DATABASES = {
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 
-AWS_STORAGE_BUCKET_NAME = 'elytteky'
-AWS_S3_ENDPOINT_URL = 'https://elytteky.sgp1.digitaloceanspaces.com'
+AWS_STORAGE_BUCKET_NAME = 'socco'
+AWS_S3_ENDPOINT_URL = 'https://socco.sgp1.digitaloceanspaces.com'
 
 AWS_S3_CUSTOM_DOMAIN = 'spaces.elytte.com/elytteky'
 AWS_S3_OBJECT_PARAMETERS = {
