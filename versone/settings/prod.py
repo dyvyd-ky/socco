@@ -27,7 +27,7 @@ AWS_S3_FILE_OVERIDE = False
 AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
@@ -35,15 +35,7 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-'''AWS_S3_ENDPOINT_URL = 'https://socco.sgp1.digitaloceanspaces.com'
 
-AWS_S3_CUSTOM_DOMAIN = 'spaces.elytte.com/elytteky'
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-
-AWS_DEFAULT_ACL = 'public-read'
-AWS_LOCATION = 'elytteky'''
 
 #STATICFILES_DIRS = [
    # os.path.join(BASE_DIR, 'static'),
