@@ -27,15 +27,16 @@ AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazoneaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
+AWS_DEFAULT_ACL = 'public-read'
 AWS_LOCATION = 'static'
 AWS_S3_FILE_OVERIDE = False
-AWS_DEFAULT_ACL = None
+
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATIC_URL = 'https://{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
