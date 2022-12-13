@@ -4,7 +4,7 @@ except ImportError:
     pass
 
 DEBUG = True
-ALLOWED_HOSTS = ['sokoni.herokuapp.com']
+ALLOWED_HOSTS = ['sokonisoko.com','www.sokonisoko.com']
 
 
 DATABASES = {
