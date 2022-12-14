@@ -5,9 +5,9 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 
-from access_token import generate_access_token
-from encode import generate_password
-from timestamp import get_timestamp
+from .access_token import generate_access_token
+from .encode import generate_password
+from .timestamp import get_timestamp
 
 
 from django.conf import settings
