@@ -6,9 +6,9 @@ from django.conf import settings
 
 def generate_access_token():
 
-    consumer_key = settings.prod.MPESA_CONSUMER_KEY
-    consumer_secret = settings.prod.MPESA_CONSUMER_SECRET
-    api_URL = 'https://api.safaricom.co.ke/oauth/v1/generate'
+    consumer_key = settings.MPESA_CONSUMER_KEY
+    consumer_secret = settings.MPESA_CONSUMER_SECRET
+    api_URL = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
     try:
         r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
