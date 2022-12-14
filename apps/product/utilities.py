@@ -1,7 +1,11 @@
+
+
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 #from apps.order.views import render_to_pdf
 from django.http import HttpResponse
+
+
 
 def decrement_product_quantity(order):
     for item in order.items.all():

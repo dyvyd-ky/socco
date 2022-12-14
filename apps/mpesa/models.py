@@ -10,7 +10,6 @@ class LNMOnline(models.Model):
     ResultDesc = models.CharField(max_length=120, blank=True, null=True)
     Amount = models.FloatField(blank=True, null=True)
     MpesaReceiptNumber = models.CharField(max_length=15, blank=True, null=True)
-    Balance = models.CharField(max_length=12, blank=True, null=True)
     TransactionDate = models.DateTimeField(blank=True, null=True)
     PhoneNumber = models.CharField(max_length=13, blank=True, null=True)
 

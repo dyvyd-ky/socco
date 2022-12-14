@@ -1,5 +1,14 @@
 import json
-from django_daraja.mpesa.core import MpesaClient
+#from django_daraja.mpesa.core import MpesaClient
+#mpesa
+#mpesa
+import requests
+from requests.auth import HTTPBasicAuth
+
+from access_token import generate_access_token
+from encode import generate_password
+from timestamp import get_timestamp
+
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -19,6 +28,7 @@ from apps.order.models import Order, OrderItem
 
 
 from .utilities import decrement_product_quantity, send_order_confirmation
+
 
 
 def create_checkout_session(request):
@@ -50,15 +60,29 @@ def create_checkout_session(request):
 
         
         if gateway == 'mpesa':
-            cl = MpesaClient()
-            phone_number = data['phone']
+            formatted_time = get_timestamp()
+            decoded_password = generate_password(formatted_time)
+            access_token = generate_access_token()
+            api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+            headers = {"Authorization": "Bearer %s" % access_token}
             
-            amount = total_price
-            account_reference = 'reference'
-            transaction_desc = 'Description'
-            callback_url = 'https://sokonisoko.com/api/payments/lnm/';
             
-            response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+            request = {
+                "BusinessShortCode": settings.MPESA_SHORTCODE,
+                "Password": decoded_password,
+                "Timestamp": formatted_time,
+                "TransactionType": "CustomerPayBillOnline",
+                "Amount": total_price,
+                "PartyA": data['phone'],
+                "PartyB": settings.MPESA_SHORTCODE,
+                "PhoneNumber": data['phone'],
+                "CallBackURL": 'https://sokonisoko.com/api/payments/lnm/',
+                "AccountReference": "ref",
+                "TransactionDesc": "desc",
+            }
+            
+            response = requests.post(api_url, json=request, headers=headers)
+            
 
 
         if response == '0':
@@ -113,7 +137,7 @@ def api_remove_from_cart(request):
 
     return JsonResponse(jsonresponse)
 
-def stk_push_callback(request):
+'''def stk_push_callback(request):
         data = request.body
         
-        return HttpResponse('')
+        return HttpResponse('')'''
