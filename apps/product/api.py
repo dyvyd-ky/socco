@@ -71,7 +71,7 @@ def create_checkout_session(request):
                 "BusinessShortCode": settings.MPESA_SHORTCODE,
                 "Password": decoded_password,
                 "Timestamp": formatted_time,
-                "TransactionType": "CustomerPayBillOnline",
+                "TransactionType": "CustomerBuyGoodsOnline",
                 "Amount": total_price,
                 "PartyA": data['phone'],
                 "PartyB": settings.MPESA_SHORTCODE,
