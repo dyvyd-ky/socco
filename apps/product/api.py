@@ -3,6 +3,7 @@ import json
 #mpesa
 #mpesa
 import requests
+from requests import Response
 from requests.auth import HTTPBasicAuth
 
 from .access_token import generate_access_token
@@ -30,6 +31,20 @@ from apps.order.models import Order, OrderItem
 from .utilities import decrement_product_quantity, send_order_confirmation
 
 
+class MpesaResponse(Response):
+	response_description = ""
+	error_code = None
+	error_message = ''
+
+
+def mpesa_response(r):
+
+	r.__class__ = MpesaResponse
+	json_response = r.json()
+	r.response_description = json_response.get('ResponseDescription', '')
+	r.error_code = json_response.get('errorCode')
+	r.error_message = json_response.get('errorMessage', '')
+	return r
 
 def create_checkout_session(request):
     data = json.loads(request.body)
@@ -37,7 +52,7 @@ def create_checkout_session(request):
 
     
     gateway = data['gateway']
-    session = ''
+    #session = ''
     order_id = ''
     payment_intent = ''
     
@@ -59,33 +74,37 @@ def create_checkout_session(request):
         
 
         
-        if gateway == 'mpesa':
-            formatted_time = get_timestamp()
-            decoded_password = generate_password(formatted_time)
-            access_token = generate_access_token()
-            api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
-            headers = {"Authorization": "Bearer %s" % access_token}
-            
-            
-            request = {
-                "BusinessShortCode": settings.MPESA_SHORTCODE,
-                "Password": decoded_password,
-                "Timestamp": formatted_time,
-                "TransactionType": "CustomerBuyGoodsOnline",
-                "Amount": total_price,
-                "PartyA": data['phone'],
-                "PartyB": settings.MPESA_SHORTCODE,
-                "PhoneNumber": data['phone'],
-                "CallBackURL": 'https://sokonisoko.com/api/payments/lnm/',
-                "AccountReference": "ref",
-                "TransactionDesc": "desc",
+    if gateway == 'mpesa':
+        formatted_time = get_timestamp()
+        decoded_password = generate_password(formatted_time)
+        access_token = generate_access_token()
+        api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        headers = {
+            "Authorization": "Bearer %s" % access_token,
+            'Content-Type': 'application/json'
             }
-            
-            response = requests.post(api_url, json=request, headers=headers)
-            
+        
+        
+        request = {
+            "BusinessShortCode": settings.MPESA_SHORTCODE,
+            "Password": decoded_password,
+            "Timestamp": formatted_time,
+            "TransactionType": "CustomerBuyGoodsOnline",
+            "Amount": total_price,
+            "PartyA": data['phone'],
+            "PartyB": settings.MPESA_SHORTCODE,
+            "PhoneNumber": data['phone'],
+            "CallBackURL": 'https://sokonisoko.com/api/payments/lnm/',
+            "AccountReference": "ref",
+            "TransactionDesc": "desc",
+        }
+        
+        r = requests.post(api_url, json=request, headers=headers)
+        response = mpesa_response(r)
+        return response
+          
 
-
-        if response == '0':
+'''        if response == '0':
             order.paid = True
             order.payment_intent = order_id
             order.save()
@@ -102,11 +121,11 @@ def create_checkout_session(request):
         order.payment_intent = payment_intent
         order.paid_amount = total_price
         
-        order.save()
+        order.save()'''
 
     
 
-    return JsonResponse({'session': session, 'order': payment_intent})
+        #return JsonResponse({'session': session, 'order': payment_intent})
 
 
 def api_add_to_cart(request):
