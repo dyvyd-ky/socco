@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'taggit',
     'django_filters',
     'rest_framework',
+    'django_daraja',
     #allauth
 
     'allauth',
