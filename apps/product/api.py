@@ -48,17 +48,17 @@ def create_checkout_session(request):
         
         
 
-    
-    if gateway == 'mpesa':
-        cl = MpesaClient()
-        phone_number = data['phone']
         
-        amount = total_price
-        account_reference = 'reference'
-        transaction_desc = 'Description'
-        callback_url = 'https://sokonisoko.com/api/payments/lnm/';
-        
-        response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+        if gateway == 'mpesa':
+            cl = MpesaClient()
+            phone_number = data['phone']
+            
+            amount = total_price
+            account_reference = 'reference'
+            transaction_desc = 'Description'
+            callback_url = 'https://sokonisoko.com/api/payments/lnm/';
+            
+            response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
 
 
         if response == '0':
