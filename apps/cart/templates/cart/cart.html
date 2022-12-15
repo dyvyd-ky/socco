@@ -208,12 +208,25 @@
 
                         fetch('/api/create_checkout_session/', {
                             method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            credentials: 'same-origin',
+                            body: JSON.stringify(data)
                         })
                         .then(function(response) {
                             return response.json()
                         })
-                        
-                        
+                        fetch('/daraja/stk-push/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': '{{ csrf_token }}'
+                                },
+                                credentials: 'same-origin',
+                                body: JSON.stringify(data)
+                        })
                         .then(function(result) {
                             window.location.href = '/cart/success/';
                         })
