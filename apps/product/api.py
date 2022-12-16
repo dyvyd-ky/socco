@@ -54,7 +54,7 @@ def create_checkout_session(request):
             phone_number = data['phone']
             
             amount = total_price
-            account_reference = 'SOKONISOKO.COM'
+            account_reference = 'reference'
             transaction_desc = 'Description'
             callback_url = 'https://sokonisoko.com/api/payments/lnm/';
             
