@@ -56,7 +56,7 @@ def create_checkout_session(request):
             amount = total_price
             account_reference = 'SOKONISOKO'
             transaction_desc = 'Description'
-            callback_url = 'https://sokonisoko.com/api/payments/lnm/';
+            callback_url = 'https://sokonisoko.com/api/payments/lnm/'
             
             response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
 
