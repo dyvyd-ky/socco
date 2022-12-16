@@ -80,7 +80,7 @@
                 
 	      
                 <a class="nav-item nav-link mx-3 text-danger"> <i class="fa fa-user text-danger mr-2"></i>Welcome {{ user.username }} </a> 
-                <a class="nav-item nav-link ml-3 bg-warning-light text-danger" href="{% url 'logout' %}">Logout</a>
+                <a class="nav-item nav-link ml-3 bg-light text-danger" href="{% url 'logout' %}">Logout</a>
                 {%else%}
                 <a class="nav-item nav-link ml-3 btn btn-danger font-weight-bold text-light" href="{% url 'login' %}">Login<i class="fa fa-sign-in ml-2 text-light"></i></a>
                 <a class="nav-item nav-link ml-3 btn btn-warning text-light font-weight-bold" href="{% url 'register' %}">SignUp</a>

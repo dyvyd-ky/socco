@@ -16,7 +16,7 @@
                         <strong>Paid amount: </strong>KSh {{ paid_amount }}
                         <span>
                             <a href="{% url 'edit_vendor'%}" class="btn btn-danger font-weight-bold">Edit your info</a>
-                            <a href="{% url 'logout' %}" class="btn bg-info-light text-danger">Log out</a>    
+                            <a href="{% url 'logout' %}" class="btn bg-light text-danger">Log out</a>    
                         </span>
                 
                 </div>
@@ -39,7 +39,7 @@
                                         KSh {{ product.get_product_price }} <br>
                                         
                                         <a class="badge bg-dangerr text-light font-weight-bold pl-2" href="{% url 'edit_product' product.id %}">Edit</a>
-                                        <a class="badge bg-warning-light text-danger pr-2" href="{% url 'delete' product.slug %}">Delete</a>
+                                        <!--a class="badge bg-warning-light text-danger pr-2" href="{% url 'delete' product.slug %}">Delete</a-->
                                         </p>
                                     </div>
                                 </div>
