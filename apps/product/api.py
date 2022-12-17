@@ -2,7 +2,7 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 import json
-from .mpesa_credentials import MpesaAccessToken, LipanaMpesaPpassword
+
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -23,17 +23,11 @@ from apps.order.models import Order, OrderItem
 
 from .utilities import decrement_product_quantity, send_order_confirmation
 
+#mpesa
+from .access_token import generate_access_token
+from .encode import generate_password
+from .timestamp import get_timestamp
 
-
-def getAccessToken(request):
-    consumer_key = settings.MPESA_CONSUMER_KEY
-    consumer_secret = settings.MPESA_CONSUMER_SECRET 
-    api_URL = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
-
-    r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
-    mpesa_access_token = json.loads(r.text)
-    validated_mpesa_access_token = mpesa_access_token['access_token']
-    return HttpResponse(validated_mpesa_access_token)
 
 def pay_soko():
     data = json.loads(request.body)
@@ -50,24 +44,31 @@ def pay_soko():
         order = Order.objects.get(pk=orderid)
         order.paid_amount = total_price
 
-    access_token = MpesaAccessToken.validated_mpesa_access_token
+    formatted_time = get_timestamp()
+    decoded_password = generate_password(formatted_time)
+    access_token = generate_access_token()
+
     api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+
     headers = {"Authorization": "Bearer %s" % access_token}
+
     request = {
-        "BusinessShortCode": LipanaMpesaPpassword.Business_short_code,
-        "Password": LipanaMpesaPpassword.decode_password,
-        "Timestamp": LipanaMpesaPpassword.lipa_time,
-        "TransactionType": "CustomerPayBillOnline",
+        "BusinessShortCode": settings.MPESA_SHORTCODE,
+        "Password": decoded_password,
+        "Timestamp": formatted_time,
+        "TransactionType": "CustomerBuyGoodsOnline",
         "Amount": total_price,
-        "PartyA": data['phone'],  
-        "PartyB": LipanaMpesaPpassword.Business_short_code,
-        "PhoneNumber": data['phone'],  
-        "CallBackURL": "https://sokoni.herokuapp.com/api/payments/lnm/",
+        "PartyA": data['phone'],
+        "PartyB": settings.MPESA_SHORTCODE,
+        "PhoneNumber": data['phone'],
+        "CallBackURL": "https://sokonisoko.com/api/payments/lnm/",
         "AccountReference": "sokonisoko.com",
-        "TransactionDesc": "payment of goods"
+        "TransactionDesc": "Pay goods online",
     }
+
     response = requests.post(api_url, json=request, headers=headers)
-    return HttpResponse(response)
+
+    print(response.text)
 
 
 
