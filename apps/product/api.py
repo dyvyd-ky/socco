@@ -1,5 +1,8 @@
 import json
-from django_daraja.mpesa.core import MpesaClient
+import requests
+from requests.auth import HTTPBasicAuth
+import json
+from .mpesa_credentials import MpesaAccessToken, LipanaMpesaPpassword
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -21,18 +24,20 @@ from apps.order.models import Order, OrderItem
 from .utilities import decrement_product_quantity, send_order_confirmation
 
 
-def create_checkout_session(request):
+
+def getAccessToken(request):
+    consumer_key = settings.MPESA_CONSUMER_KEY
+    consumer_secret = settings.MPESA_CONSUMER_SECRET 
+    api_URL = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+
+    r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+    mpesa_access_token = json.loads(r.text)
+    validated_mpesa_access_token = mpesa_access_token['access_token']
+    return HttpResponse(validated_mpesa_access_token)
+
+def pay_soko():
     data = json.loads(request.body)
     cart = Cart(request)
-
-    
-    gateway = data['gateway']
-    session = ''
-    order_id = ''
-    payment_intent = ''
-    
-    # Create order
-
     orderid = checkout(request, data['first_name'], data['last_name'], data['email'], data['address'], data['phone'])
 
     
@@ -44,45 +49,27 @@ def create_checkout_session(request):
 
         order = Order.objects.get(pk=orderid)
         order.paid_amount = total_price
-        
-        
-        
 
-        
-        if gateway == 'mpesa':
-            cl = MpesaClient()
-            phone_number = data['phone']
-            
-            amount = total_price
-            account_reference = 'SOKONISOKO'
-            transaction_desc = 'Description'
-            callback_url = 'https://sokonisoko.com/api/payments/lnm/'
-            
-            response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+    access_token = MpesaAccessToken.validated_mpesa_access_token
+    api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    headers = {"Authorization": "Bearer %s" % access_token}
+    request = {
+        "BusinessShortCode": LipanaMpesaPpassword.Business_short_code,
+        "Password": LipanaMpesaPpassword.decode_password,
+        "Timestamp": LipanaMpesaPpassword.lipa_time,
+        "TransactionType": "CustomerBuyGoodsOnline",
+        "Amount": total_price,
+        "PartyA": data['phone'],  
+        "PartyB": LipanaMpesaPpassword.Business_short_code,
+        "PhoneNumber": data['phone'],  
+        "CallBackURL": "https://sokoni.herokuapp.com/api/payments/lnm/",
+        "AccountReference": "sokonisoko.com",
+        "TransactionDesc": "payment of goods"
+    }
+    response = requests.post(api_url, json=request, headers=headers)
+    return HttpResponse('success')
 
 
-        if response == '0':
-            order.paid = True
-            order.payment_intent = order_id
-            order.save()
-
-            decrement_product_quantity(order)
-            send_order_confirmation(order)
-            
-        else:
-            order.paid = False
-            order.save()
-    else:
-        order = Order.objects.get(pk=orderid)
-        
-        order.payment_intent = payment_intent
-        order.paid_amount = total_price
-        
-        order.save()
-
-    
-
-    return JsonResponse({'session': session, 'order': payment_intent})
 
 
 def api_add_to_cart(request):
@@ -113,7 +100,7 @@ def api_remove_from_cart(request):
 
     return JsonResponse(jsonresponse)
 
-def stk_push_callback(request):
+'''def stk_push_callback(request):
         data = request.body
         
-        return HttpResponse('')
+        return HttpResponse('')'''
