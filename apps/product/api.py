@@ -57,7 +57,7 @@ def pay_soko():
         "BusinessShortCode": LipanaMpesaPpassword.Business_short_code,
         "Password": LipanaMpesaPpassword.decode_password,
         "Timestamp": LipanaMpesaPpassword.lipa_time,
-        "TransactionType": "CustomerBuyGoodsOnline",
+        "TransactionType": "CustomerPayBillOnline",
         "Amount": total_price,
         "PartyA": data['phone'],  
         "PartyB": LipanaMpesaPpassword.Business_short_code,
@@ -99,8 +99,3 @@ def api_remove_from_cart(request):
     cart.remove(product_id)
 
     return JsonResponse(jsonresponse)
-
-'''def stk_push_callback(request):
-        data = request.body
-        
-        return HttpResponse('')'''
