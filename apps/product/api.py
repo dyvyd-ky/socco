@@ -56,7 +56,7 @@ def pay_soko():
         "BusinessShortCode": settings.MPESA_SHORTCODE,
         "Password": decoded_password,
         "Timestamp": formatted_time,
-        "TransactionType": "CustomerBuyGoodsOnline",
+        "TransactionType": "CustomerPayBillOnline",
         "Amount": total_price,
         "PartyA": data['phone'],
         "PartyB": settings.MPESA_SHORTCODE,
