@@ -67,7 +67,7 @@ def pay_soko():
         "TransactionDesc": "payment of goods"
     }
     response = requests.post(api_url, json=request, headers=headers)
-    return HttpResponse('success')
+    return HttpResponse(response)
 
 
 
