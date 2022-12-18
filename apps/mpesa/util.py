@@ -84,9 +84,11 @@ class MpesaGateWay:
         return base64.b64encode(password_bytes).decode("utf-8")
 
     @Decorators.refreshToken
-    def stk_push_request(self, amount, phone_number):
-        amount = amount
-        phone_number = phone_number
+    def stk_push_request(self, payload):
+        request = payload["request"]
+        data = payload["data"]
+        amount = data["amount"]
+        phone_number = data["phone_number"]
         req_data = {
             "BusinessShortCode": self.shortcode,
             "Password": self.password,

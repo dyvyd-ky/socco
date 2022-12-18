@@ -57,9 +57,11 @@ def create_checkout_session(request):
 
         
     if gateway == 'mpesa':
-        cl = MpesaGateWay()    
+        cl = MpesaGateWay()  
+        payload = {'amount':total_price, 'phone_number':data['phone']}
+         
 
-        res = cl.stk_push_request(amount=total_price, phone_number=data['phone'])
+        res = cl.stk_push_request(payload=payload)
 
         if res == '0':
             order.paid = True
