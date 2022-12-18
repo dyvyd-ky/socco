@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-from apps.mpesa.models import LNMOnline
+from apps.mpesa.models import Transaction
 
 
-class LNMOnlineAdmin(admin.ModelAdmin):
-    list_display = ("PhoneNumber", "Amount", "MpesaReceiptNumber", "TransactionDate")
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ("phone_number", "amount", "receipt_no", "created")
 
-admin.site.register(LNMOnline,LNMOnlineAdmin)
+admin.site.register(Transaction,TransactionAdmin)
