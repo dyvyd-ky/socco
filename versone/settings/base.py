@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'storages',
+    "phonenumber_field",
 ]
 
 SITE_ID = 1

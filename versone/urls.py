@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('accounts/', include('allauth.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('api/payments/', include('apps.mpesa.api.urls')),
+    path('payments/', include('apps.mpesa.urls')),
 
     path('', include('apps.core.urls')),
     path('', include('apps.product.urls')),

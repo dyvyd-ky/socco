@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 
 from apps.cart.cart import Cart
+from apps.mpesa.util import MpesaGateWay
 #from apps.order.views import render_to_pdf
 
 from apps.order.utilities import checkout, notify_customer, notify_vendor
@@ -23,15 +24,22 @@ from apps.order.models import Order, OrderItem
 
 from .utilities import decrement_product_quantity, send_order_confirmation
 
-#mpesa
-from .access_token import generate_access_token
-from .encode import generate_password
-from .timestamp import get_timestamp
 
 
-def pay_soko():
+
+
+def create_checkout_session(request):
     data = json.loads(request.body)
     cart = Cart(request)
+
+    
+    gateway = data['gateway']
+    session = ''
+    order_id = ''
+    payment_intent = ''
+    
+    # Create order
+
     orderid = checkout(request, data['first_name'], data['last_name'], data['email'], data['address'], data['phone'])
 
     
@@ -43,33 +51,39 @@ def pay_soko():
 
         order = Order.objects.get(pk=orderid)
         order.paid_amount = total_price
+        
+        
+        
 
-    formatted_time = get_timestamp()
-    decoded_password = generate_password(formatted_time)
-    access_token = generate_access_token()
+        
+    if gateway == 'mpesa':
+        gateway = MpesaGateWay()
+            
 
-    api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        res = gateway.stk_push_request(amount=total_price, phone_number=data['phone'])
 
-    headers = {"Authorization": "Bearer %s" % access_token}
+        if res == '0':
+            order.paid = True
+            order.payment_intent = order_id
+            order.save()
 
-    request = {
-        "BusinessShortCode": settings.MPESA_SHORTCODE,
-        "Password": decoded_password,
-        "Timestamp": formatted_time,
-        "TransactionType": "CustomerPayBillOnline",
-        "Amount": total_price,
-        "PartyA": data['phone'],
-        "PartyB": settings.MPESA_SHORTCODE,
-        "PhoneNumber": data['phone'],
-        "CallBackURL": "https://sokonisoko.com/api/payments/lnm/",
-        "AccountReference": "sokonisoko.com",
-        "TransactionDesc": "Pay goods online",
-    }
+            decrement_product_quantity(order)
+            send_order_confirmation(order)
+            
+        else:
+            order.paid = False
+            order.save()
+    else:
+        order = Order.objects.get(pk=orderid)
+        
+        order.payment_intent = payment_intent
+        order.paid_amount = total_price
+        
+        order.save()
 
-    response = requests.post(api_url, json=request, headers=headers)
+    
 
-    print(response.text)
-
+    return JsonResponse({'session': session, 'order': payment_intent})
 
 
 
