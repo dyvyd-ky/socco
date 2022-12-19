@@ -49,17 +49,17 @@ def create_checkout_session(request):
         
 
         
-        if gateway == 'mpesa':
-            cl = MpesaClient()
-            phone_number = data['phone']
+    if gateway == 'mpesa':
+        cl = MpesaClient()
+        phone_number = data['phone']
+        
+        amount = total_price
+        account_reference = 'sokonisoko.com'
+        transaction_desc = 'pay goods online'
+        callback_url = 'https://sokonisoko.com/payments/callback/'
+        
+        response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
             
-            amount = total_price
-            account_reference = 'sokonisoko.com'
-            transaction_desc = 'pay goods online'
-            callback_url = 'https://sokonisoko.com/payments/callback/'
-            
-            response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
-            return HttpResponse(response)
 
         if response == '0':
             order.paid = True
