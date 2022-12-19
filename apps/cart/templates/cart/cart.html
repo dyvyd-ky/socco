@@ -206,7 +206,10 @@
                 if (this.validateForm() === 0) {
                     if (gateway === 'mpesa') {
 
-                        fetch('/api/create_checkout_session/')
+                        fetch('/api/create_checkout_session/',
+                        {   credentials: 'same-origin',
+                            body: JSON.stringify(data)
+                        })
                         .then(function(response) {
                             return response.json()
                         })
