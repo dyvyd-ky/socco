@@ -218,16 +218,7 @@
                         .then(function(response) {
                             return response.json()
                         })
-                        fetch('/payments/checkout/', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Accept': 'application/json',
-                                    'X-CSRFToken': '{{ csrf_token }}'
-                                },
-                                credentials: 'same-origin',
-                                body: JSON.stringify(data)
-                        })
+                       
                         .then(function(result) {
                             window.location.href = '/cart/success/';
                         })

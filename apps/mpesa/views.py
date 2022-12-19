@@ -1,35 +1,71 @@
-import json
-import logging
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from . import utils
 
-from rest_framework.decorators import authentication_classes, permission_classes
+from django.http import HttpResponse, JsonResponse
+from django.views.generic import View
+from .core import MpesaClient
+from decouple import config
+from datetime import datetime
+
+from rest_framework.generics import CreateAPIView
+
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from .serializers import MpesaCheckoutSerializer
-from .util import MpesaGateWay
+from .models import LNMOnline
+from .serializers import LNMOnlineSerializer
 
-gateway = MpesaGateWay()
 
-@authentication_classes([])
-@permission_classes((AllowAny,))
-class MpesaCheckout(APIView):
-    serializer = MpesaCheckoutSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            payload = {"data":serializer.validated_data, "request":request}
-            res = gateway.stk_push_request(payload)
-            return Response(res, status=200)
+class LNMCallbackUrlAPIView(CreateAPIView):
+    queryset = LNMOnline.objects.all()
+    serializer_class = LNMOnlineSerializer
+    permission_classes = [AllowAny]
 
-@authentication_classes([])
-@permission_classes((AllowAny,))
-class MpesaCallBack(APIView):
-    def get(self, request):
-        return Response({"status": "OK"}, status=200)
+    def create(self, request):
+        merchant_request_id = request.data["Body"]["stkCallback"]["MerchantRequestID"]
+        checkout_request_id = request.data["Body"]["stkCallback"]["CheckoutRequestID"]
+        result_code = request.data["Body"]["stkCallback"]["ResultCode"]
+        result_description = request.data["Body"]["stkCallback"]["ResultDesc"]
+        amount = request.data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][0][
+            "Value"
+        ]
+        mpesa_receipt_number = request.data["Body"]["stkCallback"]["CallbackMetadata"][
+            "Item"
+        ][1]["Value"]
+        transaction_date = request.data["Body"]["stkCallback"]["CallbackMetadata"][
+            "Item"
+        ][2]["Value"]
 
-    def post(self, request, *args, **kwargs):
-        logging.info("{}".format("Callback from MPESA"))
-        data = request.body
-        return gateway.callback(json.loads(data))
+        phone_number = request.data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][
+            3
+        ]["Value"]
+
+        from datetime import datetime
+
+        str_transaction_date = str(transaction_date)
+
+        transaction_datetime = datetime.strptime(str_transaction_date, "%Y%m%d%H%M%S")
+
+        import pytz
+        aware_transaction_datetime = pytz.utc.localize(transaction_datetime)
+
+        from mpesa.models import LNMOnline
+
+        our_model = LNMOnline.objects.create(
+            CheckoutRequestID=checkout_request_id,
+            MerchantRequestID=merchant_request_id,
+            Amount=amount,
+            ResultCode=result_code,
+            ResultDesc=result_description,
+            MpesaReceiptNumber=mpesa_receipt_number,
+            TransactionDate=aware_transaction_datetime,
+            PhoneNumber=phone_number,
+        )
+
+        our_model.save()
+
+        from rest_framework.response import Response
+
+        return Response({"OurResultDesc": "YEEY!!! It worked!"})
+

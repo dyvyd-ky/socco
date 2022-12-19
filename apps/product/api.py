@@ -1,8 +1,4 @@
 import json
-import requests
-from requests.auth import HTTPBasicAuth
-import json
-
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -13,19 +9,15 @@ from django.shortcuts import get_object_or_404, redirect
 
 
 from apps.cart.cart import Cart
-from apps.mpesa.util import MpesaGateWay
 #from apps.order.views import render_to_pdf
 
 from apps.order.utilities import checkout, notify_customer, notify_vendor
 
 from .models import Product
 from apps.order.models import Order, OrderItem
-
+from apps.mpesa.core import MpesaClient
 
 from .utilities import decrement_product_quantity, send_order_confirmation
-
-
-
 
 
 def create_checkout_session(request):
@@ -56,15 +48,19 @@ def create_checkout_session(request):
         
 
         
-    if gateway == 'mpesa':
-        cl = MpesaGateWay()  
-        phone_number = data['phone']
-        payload = {'amount':total_price, 'phone_number':phone_number}
-         
+        if gateway == 'mpesa':
+            cl = MpesaClient()
+            phone_number = data['phone']
+            
+            amount = total_price
+            account_reference = 'reference'
+            transaction_desc = 'Description'
+            callback_url = 'https://sokonisoko.com/payments/callback/'
+            
+            response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
 
-        res = cl.stk_push_request(payload=payload)
 
-        if res == '0':
+        if response == '0':
             order.paid = True
             order.payment_intent = order_id
             order.save()
@@ -86,7 +82,6 @@ def create_checkout_session(request):
     
 
     return JsonResponse({'session': session, 'order': payment_intent})
-
 
 
 def api_add_to_cart(request):
@@ -116,3 +111,4 @@ def api_remove_from_cart(request):
     cart.remove(product_id)
 
     return JsonResponse(jsonresponse)
+
