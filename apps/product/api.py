@@ -20,13 +20,13 @@ from apps.mpesa.core import MpesaClient
 from .utilities import decrement_product_quantity, send_order_confirmation
 
 def index(request):
-    data = request.data
+    data = json.loads(request.body)
     cart = Cart(request)
     
     # Create order
 
     orderid = checkout(request, data['first_name'], data['last_name'], data['email'], data['address'], data['phone'])
-
+    phone = data['phone']
     
     for item in cart:
         product = item['product']
@@ -38,7 +38,7 @@ def index(request):
         order.paid_amount = total_price
         
     cl = MpesaClient()
-    phone_number = data['phone']
+    phone_number = phone
     
     amount = total_price
     account_reference = 'sokonisoko.com'
