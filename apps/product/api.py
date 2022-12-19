@@ -19,8 +19,9 @@ from apps.order.models import Order, OrderItem
 
 
 from .utilities import decrement_product_quantity, send_order_confirmation
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 def create_checkout_session(request):
     data = json.loads(request.body)
     cart = Cart(request)
