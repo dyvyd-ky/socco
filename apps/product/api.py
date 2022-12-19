@@ -20,7 +20,7 @@ from apps.mpesa.core import MpesaClient
 from .utilities import decrement_product_quantity, send_order_confirmation
 
 def index(request):
-    data = json.loads(request.body)
+    data = request.data
     cart = Cart(request)
     
     # Create order
