@@ -108,7 +108,7 @@
                         </div>
                         <div class="field col-md-12 my-3">
                             <div class="control">
-                                <a href="{% url 'checkout' %}" class="btn btn-success font-weight-bold">Lipa na Mpesa</a>
+                                <button class="btn btn-success font-weight-bold" v-on:click="buy('mpesa')">Lipa na Mpesa</button>
                         
                             </div>
                         </div>
@@ -193,7 +193,39 @@
             
             
         
-           
+           buy(gateway) {
+                var data = {
+                    'first_name': this.first_name,
+                    'last_name': this.last_name,
+                    'email': this.email,
+                    'address': this.address,
+                    'phone': this.phone,                    
+                    'gateway': gateway
+                };
+
+                if (this.validateForm() === 0) {
+                    if (gateway === 'mpesa') {
+
+                        fetch('/api/create_checkout_session/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            credentials: 'same-origin',
+                            body: JSON.stringify(data)
+                        })
+                        .then(function(response) {
+                            return response.json()
+                        })
+                       
+                        .then(function(result) {
+                            window.location.href = '/cart/success/';
+                        })
+                    } 
+                            
+                }
+            },
             incrementQuantity(product_id, quantity, price) {
                 console.log('Product_id:', product_id);
 

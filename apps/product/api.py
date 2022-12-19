@@ -1,4 +1,5 @@
 import json
+from apps.mpesa.utils import MpesaClient
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -15,18 +16,25 @@ from apps.order.utilities import checkout, notify_customer, notify_vendor
 
 from .models import Product
 from apps.order.models import Order, OrderItem
-from apps.mpesa.core import MpesaClient
+
 
 from .utilities import decrement_product_quantity, send_order_confirmation
 
-def index(request):
+
+def create_checkout_session(request):
     data = json.loads(request.body)
     cart = Cart(request)
+
+    
+    gateway = data['gateway']
+    session = ''
+    order_id = ''
+    payment_intent = ''
     
     # Create order
 
     orderid = checkout(request, data['first_name'], data['last_name'], data['email'], data['address'], data['phone'])
-    phone = data['phone']
+
     
     for item in cart:
         product = item['product']
@@ -37,18 +45,45 @@ def index(request):
         order = Order.objects.get(pk=orderid)
         order.paid_amount = total_price
         
-    cl = MpesaClient()
-    phone_number = phone
-    
-    amount = total_price
-    account_reference = 'sokonisoko.com'
-    transaction_desc = 'buy goods online'
-    callback_url = 'https://sokonisoko.com/payments/callback/'
-    response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+        
+        
 
-    return HttpResponse(response)
+        
+        if gateway == 'mpesa':
+            cl = MpesaClient()
+            phone_number = data['phone']
+            
+            amount = total_price
+            account_reference = 'sokonisoko.com'
+            transaction_desc = 'pay goods online'
+            callback_url = 'https://sokoni.herokuapp.com/payments/callback/'
+            
+            response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+            return HttpResponse(response)
+
+        if response == '0':
+            order.paid = True
+            order.payment_intent = order_id
+            order.save()
+
+            decrement_product_quantity(order)
+            send_order_confirmation(order)
+            
+        else:
+            order.paid = False
+            order.save()
+    else:
+        order = Order.objects.get(pk=orderid)
+        
+        order.payment_intent = payment_intent
+        order.paid_amount = total_price
+        
+        order.save()
 
     
+
+    return JsonResponse({'session': session, 'order': payment_intent})
+
 
 def api_add_to_cart(request):
     data = json.loads(request.body)
