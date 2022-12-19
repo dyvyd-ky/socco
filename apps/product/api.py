@@ -1,5 +1,5 @@
 import json
-from apps.mpesa.utils import MpesaClient
+from apps.mpesa.core import MpesaClient
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
