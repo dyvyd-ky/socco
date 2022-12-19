@@ -11,12 +11,13 @@ urlpatterns = [
     path('vendors/', include('apps.vendor.urls')),
     path('cart/', include('apps.cart.urls')),
     path('users/', include('apps.users.urls')),
+    path('payments/', include('apps.mpesa.urls')),
+
     path('pages/', include('django.contrib.flatpages.urls')),
 
     path('accounts/', include('allauth.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('payments/', include('apps.mpesa.urls')),
-
+    
     path('', include('apps.core.urls')),
     path('', include('apps.product.urls')),
     
