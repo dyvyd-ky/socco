@@ -208,6 +208,10 @@
 
                         fetch('/api/create_checkout_session/', {
                             method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                
+                            },
                             credentials: 'same-origin',
                             body: JSON.stringify(data)
                         })
