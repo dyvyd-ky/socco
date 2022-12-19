@@ -56,7 +56,7 @@ def create_checkout_session(request):
             amount = total_price
             account_reference = 'sokonisoko.com'
             transaction_desc = 'pay goods online'
-            callback_url = 'https://sokoni.herokuapp.com/payments/callback/'
+            callback_url = 'https://sokonisoko.com/payments/callback/'
             
             response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
             return HttpResponse(response)
