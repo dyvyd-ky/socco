@@ -10,7 +10,7 @@ urlpatterns = [
 
     path('api/add_to_cart/', api_add_to_cart, name='api_add_to_cart'),
     path('api/remove_from_cart/', api_remove_from_cart, name='api_remove_from_cart'),
-    path('api/create_checkout_session/', create_checkout_session, name='create_checkout_session'),
+    path('api/checkout/', index, name='checkout'),
     path('<slug:category_slug>/<slug:product_slug>/', views.product, name='product'),
     path('<slug:category_slug>/', views.category, name='category'),
     

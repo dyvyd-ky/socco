@@ -19,16 +19,9 @@ from apps.mpesa.core import MpesaClient
 
 from .utilities import decrement_product_quantity, send_order_confirmation
 
-
-def create_checkout_session(request):
+def index(request):
     data = json.loads(request.body)
     cart = Cart(request)
-
-    
-    gateway = data['gateway']
-    session = ''
-    order_id = ''
-    payment_intent = ''
     
     # Create order
 
@@ -44,46 +37,18 @@ def create_checkout_session(request):
         order = Order.objects.get(pk=orderid)
         order.paid_amount = total_price
         
-        
-        
+    cl = MpesaClient()
+    phone_number = data['phone']
+    
+    amount = total_price
+    account_reference = 'sokonisoko.com'
+    transaction_desc = 'buy goods online'
+    callback_url = 'https://sokonisoko.com/payments/callback/'
+    response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
 
-        
-        if gateway == 'mpesa':
-            cl = MpesaClient()
-            phone_number = data['phone']
-            
-            amount = total_price
-            account_reference = 'sokonisoko.com'
-            transaction_desc = 'buy goods online'
-            callback_url = 'https://sokonisoko.com/payments/callback/'
-
-
-            response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
-
-
-        if response == '0':
-            order.paid = True
-            order.payment_intent = order_id
-            order.save()
-
-            decrement_product_quantity(order)
-            send_order_confirmation(order)
-            
-        else:
-            order.paid = False
-            order.save()
-    else:
-        order = Order.objects.get(pk=orderid)
-        
-        order.payment_intent = payment_intent
-        order.paid_amount = total_price
-        
-        order.save()
+    return HttpResponse(response)
 
     
-
-    return JsonResponse({'session': session, 'order': payment_intent})
-
 
 def api_add_to_cart(request):
     data = json.loads(request.body)
