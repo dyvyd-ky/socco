@@ -218,7 +218,23 @@
                         .then(function(response) {
                             return response.json()
                         })
-
+                        fetch('/payments/callback/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    
+                                },
+                                credentials: 'same-origin',
+                                body: JSON.stringify(data)
+                        })
+                        .then(function(result) {
+                            if (result.error) {
+                                alert(result.error.message)
+                            }
+                        })
+                        .catch(function(error) {
+                            console.log('Error:', error);
+                        });
                     } 
                             
                 }
