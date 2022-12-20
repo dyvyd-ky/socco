@@ -61,7 +61,7 @@ def create_checkout_session(request):
         
         transaction_id = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
         message = {"status": "ok", "transaction_id": transaction_id}
-        return Response(message, status=HTTP_200_OK)
+        return JsonResponse(message)
         
        
 
