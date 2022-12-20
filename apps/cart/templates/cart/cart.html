@@ -218,15 +218,6 @@
                         .then(function(response) {
                             return response.json()
                         })
-                        
-                        .then(function(result) {
-                            if (result.error) {
-                                alert(result.error.message)
-                            }
-                        })
-                        .catch(function(error) {
-                            console.log('Error:', error);
-                        });
                     } 
                             
                 }
