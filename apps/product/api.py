@@ -60,12 +60,12 @@ def create_checkout_session(request):
         callback_url = 'https://sokonisoko.com/payments/callback/'
         
         transaction_id = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
-        message = {"status": "ok", "transaction_id": transaction_id}
-        return JsonResponse(message)
+        message = {"transaction_id": transaction_id}
+    return JsonResponse(message)
         
        
 
-        '''if response == '0':
+    '''if response == '0':
             order.paid = True
             order.payment_intent = order_id
             order.save()
