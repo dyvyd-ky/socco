@@ -64,28 +64,18 @@ def create_checkout_session(request):
         
        
 
-        if response == '0':
-            order.paid = True
-            order.payment_intent = order_id
-            order.save()
-
-            decrement_product_quantity(order)
-            send_order_confirmation(order)
-            
-        else:
-            order.paid = False
-            order.save()
-    else:
-        order = Order.objects.get(pk=orderid)
         
-        order.payment_intent = payment_intent
-        order.paid_amount = total_price
-        
+        order.paid = True
         order.save()
 
-    
+        decrement_product_quantity(order)
+        send_order_confirmation(order)
+            
+    else:
+        order.paid = False
+        order.save()
 
-    return JsonResponse({'session': session, 'order': payment_intent, 'response':response})
+    return JsonResponse({'response':response})
 
 
 def api_add_to_cart(request):
