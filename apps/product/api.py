@@ -28,6 +28,7 @@ def create_checkout_session(request):
 
     
     gateway = data['gateway']
+    order_id = ''
     
     
     # Create order
@@ -42,10 +43,7 @@ def create_checkout_session(request):
         
 
         order = Order.objects.get(pk=orderid)
-        order.paid_amount = total_price
-        
-        
-        
+        order.paid_amount = total_price     
 
         
     if gateway == 'mpesa':
@@ -58,22 +56,28 @@ def create_checkout_session(request):
         callback_url = 'https://sokonisoko.com/payments/callback/'
         
         response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+        data = response.json()
         
-        
-       
 
-        
-        order.paid = True
-        order.save()
+        if data['ResponseCode'] == '0':
+            order.paid = True
+            order.payment_intent = order_id
+            order.save()
 
-        decrement_product_quantity(order)
-        send_order_confirmation(order)
+            decrement_product_quantity(order)
+            send_order_confirmation(order)
             
+        else:
+            order.paid = False
+            order.save()
     else:
-        order.paid = False
+        order = Order.objects.get(pk=orderid)
+        
+        order.payment_intent = payment_intent
+        order.paid_amount = total_price
+        
         order.save()
-
-    return response
+    return data
 
 
 def api_add_to_cart(request):
