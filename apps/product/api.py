@@ -76,7 +76,7 @@ def create_checkout_session(request):
         else:
             order.paid = False
             order.save()'''
-    else:
+    '''else:
         order = Order.objects.get(pk=orderid)
         
         order.payment_intent = payment_intent
@@ -86,7 +86,7 @@ def create_checkout_session(request):
 
     
 
-    return JsonResponse({'session': session, 'order': payment_intent})
+    return JsonResponse({'session': session, 'order': payment_intent})'''
 
 
 def api_add_to_cart(request):
