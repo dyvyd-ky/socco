@@ -1,10 +1,10 @@
 from django.urls import path, include
-from .views import LNMCallbackUrlAPIView
+from .views import ConfirmView
 
 
 
 urlpatterns = [
-	path('callback/', LNMCallbackUrlAPIView.as_view(), name='callback'),
+	path('callback/', ConfirmView.as_view(), name='callback'),
 
 ]
 
