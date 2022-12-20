@@ -6,7 +6,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 #from django.template.loader import render_to_string
-
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 
 
 from apps.cart.cart import Cart
@@ -58,10 +59,13 @@ def create_checkout_session(request):
         transaction_desc = 'pay goods online'
         callback_url = 'https://sokonisoko.com/payments/callback/'
         
-        response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+        transaction_id = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+        message = {"status": "ok", "transaction_id": transaction_id}
+        return Response(message, status=HTTP_200_OK)
+        
        
 
-        if response == '0':
+        '''if response == '0':
             order.paid = True
             order.payment_intent = order_id
             order.save()
@@ -71,7 +75,7 @@ def create_checkout_session(request):
             
         else:
             order.paid = False
-            order.save()
+            order.save()'''
     else:
         order = Order.objects.get(pk=orderid)
         
