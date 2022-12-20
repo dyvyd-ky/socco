@@ -28,9 +28,7 @@ def create_checkout_session(request):
 
     
     gateway = data['gateway']
-    session = ''
-    order_id = ''
-    payment_intent = ''
+    
     
     # Create order
 
@@ -75,7 +73,7 @@ def create_checkout_session(request):
         order.paid = False
         order.save()
 
-    return JsonResponse(response)
+    return response
 
 
 def api_add_to_cart(request):
