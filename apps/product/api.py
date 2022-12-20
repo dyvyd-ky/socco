@@ -29,6 +29,7 @@ def create_checkout_session(request):
     
     gateway = data['gateway']
     order_id = ''
+    payment_intent = ''
     
     
     # Create order
