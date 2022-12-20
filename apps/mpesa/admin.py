@@ -1,15 +1,17 @@
+
+
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from .models import PaymentTransaction
 
-from django.contrib import admin
 
 # Register your models here.
-from .models import LNMOnline
+
+class PaymentTransactionAdmin(admin.ModelAdmin):
+    list_display = ("phone_number", "amount", "is_finished",
+                    "is_successful", "trans_id", 'date_created', 'date_modified')
 
 
-class LNMOnlineAdmin(admin.ModelAdmin):
-    list_display = ("PhoneNumber", "Amount", "MpesaReceiptNumber", "TransactionDate")
-
-admin.site.register(LNMOnline,LNMOnlineAdmin)
+admin.site.register(PaymentTransaction, PaymentTransactionAdmin)
