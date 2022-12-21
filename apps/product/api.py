@@ -31,7 +31,7 @@ def create_checkout_session(request):
     gateway = data['gateway']
     order_id = ''
     payment_intent = ''
-   
+    transaction_id = ''
     
     
     # Create order
@@ -71,8 +71,8 @@ def create_checkout_session(request):
         order.paid = False
         order.save()
 
-    print(transaction_id) 
-    return transaction_id
+    
+    return JsonResponse({'success': True, 'transaction_id':transaction_id})
 
 
 def api_add_to_cart(request):
