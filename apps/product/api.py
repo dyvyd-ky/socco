@@ -58,7 +58,7 @@ def create_checkout_session(request):
         transaction_desc = 'pay goods online'
         callback_url = 'https://sokonisoko.com/payments/callback/'
         
-        transaction_id = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+        response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
         
         
         order.paid = True
@@ -72,8 +72,7 @@ def create_checkout_session(request):
         order.save()
 
     
-    return JsonResponse({'success': True, 'transaction_id':transaction_id})
-
+    return HttpResponse(response)
 
 def api_add_to_cart(request):
     data = json.loads(request.body)
