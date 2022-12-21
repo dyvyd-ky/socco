@@ -23,7 +23,8 @@ from .utilities import decrement_product_quantity, send_order_confirmation
 
 
 def create_checkout_session(request):
-    data = json.loads(request.body)
+    #data = json.loads(request.body)
+    data = request.body
     cart = Cart(request)
 
     
