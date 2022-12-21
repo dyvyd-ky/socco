@@ -215,9 +215,15 @@
                             credentials: 'same-origin',
                             body: JSON.stringify(data)
                         })
-                        .then(response => response.json())  // convert to json
-                        .then(json => console.log(json))    //print data to console
-                        .catch(err => console.log('Request Failed', err)); // Catch errors
+                        .then((response) => {
+                        return response.json();
+                        })
+                        .then((data) => {
+                        let data = data;
+                        })
+                        .catch(function(error) {
+                        console.log(error);
+                        });
                     } 
                             
                 }
