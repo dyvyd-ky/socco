@@ -72,7 +72,7 @@ def create_checkout_session(request):
         order.save()
 
     print(transaction_id) 
-    return HttpResponse(transaction_id)
+    return transaction_id
 
 
 def api_add_to_cart(request):
