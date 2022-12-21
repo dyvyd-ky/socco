@@ -72,7 +72,7 @@ def create_checkout_session(request):
         order.save()
 
     
-    return response
+    response()
 
 def api_add_to_cart(request):
     data = json.loads(request.body)
