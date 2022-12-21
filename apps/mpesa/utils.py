@@ -25,7 +25,7 @@ class MpesaResponse(Response):
 	error_message = ''
 
 
-def mpesa_response(r):
+'''def mpesa_response(r):
 
 
 	r.__class__ = MpesaResponse
@@ -33,7 +33,7 @@ def mpesa_response(r):
 	r.response_description = json_response.get('ResponseDescription', '')
 	r.error_code = json_response.get('errorCode')
 	r.error_message = json_response.get('errorMessage', '')
-	return r
+	return r'''
 
 
 def mpesa_config(key):
