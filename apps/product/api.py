@@ -64,7 +64,7 @@ def create_checkout_session(request):
         order.save()
 
         decrement_product_quantity(order)
-        send_order_confirmation(order)
+        #send_order_confirmation(order)
             
     else:
         order.paid = False
