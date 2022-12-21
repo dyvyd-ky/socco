@@ -71,9 +71,7 @@ def create_checkout_session(request):
         order.paid = False
         order.save()
 
-    
-    data = response.json()
-    return data
+    return response
 
 def api_add_to_cart(request):
     data = json.loads(request.body)
