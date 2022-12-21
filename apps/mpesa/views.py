@@ -12,8 +12,11 @@ from rest_framework.response import Response
 from .models import PaymentTransaction
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
+from .serializers import PaymentTransactionSerializer
 
 class ConfirmView(APIView):
+    queryset = PaymentTransaction.objects.all()
+    serializer_class = PaymentTransactionSerializer
     permission_classes = [AllowAny, ]
 
     def post(self, request):
