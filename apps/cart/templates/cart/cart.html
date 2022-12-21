@@ -216,7 +216,7 @@
                             body: JSON.stringify(data)
                         })
                         .then((response) => {
-                        return response.json();
+                        return response
                         })
                         .catch(function(error) {
                         console.log(error);
