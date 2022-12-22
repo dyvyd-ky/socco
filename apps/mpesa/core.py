@@ -4,7 +4,7 @@ import base64
 from datetime import datetime
 import json
 from .exceptions import MpesaInvalidParameterException, MpesaConnectionError
-from .utils import encrypt_security_credential, mpesa_access_token, format_phone_number, api_base_url, mpesa_config #, mpesa_response
+from .utils import encrypt_security_credential, mpesa_access_token, format_phone_number, api_base_url, mpesa_config, mpesa_response
 from decouple import config
 
 class MpesaClient:
@@ -117,8 +117,8 @@ class MpesaClient:
 		}
 
 		try:
-			response = requests.post(url, json=data, headers=headers)
-			#response = mpesa_response(r)
+			r = requests.post(url, json=data, headers=headers)
+			response = mpesa_response(r)
 			return response
 		except requests.exceptions.ConnectionError:
 			raise MpesaConnectionError('Connection failed')
