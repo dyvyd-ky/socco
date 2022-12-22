@@ -3,7 +3,7 @@ try:
 except ImportError:
     pass
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['sokoni.herokuapp.com','sokonisoko.com','www.sokonisoko.com']
 
 
