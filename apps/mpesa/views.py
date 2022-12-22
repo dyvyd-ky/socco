@@ -17,7 +17,7 @@ class LNMCallbackUrlAPIView(CreateAPIView):
         #request_data = request.data
         request_data = request.data
         print(request_data)
-        merchant_request_id = request_data["Body"]["stkCallback"]["MerchantRequestID"]
+        '''merchant_request_id = request_data["Body"]["stkCallback"]["MerchantRequestID"]
         checkout_request_id = request_data["Body"]["stkCallback"]["CheckoutRequestID"]
         result_code = request_data["Body"]["stkCallback"]["ResultCode"]
         result_description = request_data["Body"]["stkCallback"]["ResultDesc"]
@@ -64,5 +64,5 @@ class LNMCallbackUrlAPIView(CreateAPIView):
         from rest_framework.response import Response
 
         return Response({"OurResultDesc": "..and it all worked out!"})
-
+'''
 
