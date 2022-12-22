@@ -206,7 +206,7 @@
                 if (this.validateForm() === 0) {
                     if (gateway === 'mpesa') {
 
-                        fetch('/api/create_checkout_session/', {
+                        fetch('/api/create_checkout_session/')/*, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -214,7 +214,7 @@
                             },
                             credentials: 'same-origin',
                             body: JSON.stringify(data)
-                        })
+                        })*/
                     } 
                             
                 }
