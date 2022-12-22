@@ -32,12 +32,12 @@ class LNMCallbackUrlAPIView(CreateAPIView):
         our_model = LNMOnline.objects.create(
             CheckoutRequestID=info['CheckoutRequestID'],
             MerchantRequestID=info['MerchantRequestID'],
-            Amount=info[item['Amount']],
+            Amount=info[item['Name'][0]],
             ResultCode=info['ResultCode'],
             ResultDesc=info['ResultDesc'],
-            MpesaReceiptNumber=info[item['MpesaReceiptNumber']],
-            TransactionDate=info[item['TransactionDate']],
-            PhoneNumber=info[item['PhoneNumber']]
+            MpesaReceiptNumber=info[item['Name'][1]],
+            TransactionDate=info[item['Name'][2]],
+            PhoneNumber=info[item['Name'][3]]
         )
 
         our_model.save()
