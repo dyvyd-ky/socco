@@ -22,11 +22,12 @@ class LNMCallbackUrlAPIView(CreateAPIView):
         info['ResultDesc'] = callback['ResultDesc']
         info['MerchantRequestID'] = callback['MerchantRequestID']
         info['CheckoutRequestID'] = callback['CheckoutRequestID']
-        metadata = callback.get('CallbackMetadata')
-        if metadata:
-            metadata_items = metadata.get('Item')
-            for item in metadata_items:
-                info[item['Name']] = item.get('Value')
+        if callback['CallbackMetadata']:
+            metadata = callback.get('CallbackMetadata')
+            if metadata:
+                metadata_items = metadata.get('Item')
+                for item in metadata_items:
+                    info[item['Name']] = item.get('Value')
         
         
         our_model = LNMOnline.objects.create(
