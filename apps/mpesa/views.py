@@ -24,10 +24,9 @@ class LNMCallbackUrlAPIView(CreateAPIView):
         info['CheckoutRequestID'] = callback['CheckoutRequestID']
         if callback['CallbackMetadata']:
             metadata = callback.get('CallbackMetadata')
-            if metadata:
-                metadata_items = metadata.get('Item')
-                for item in metadata_items:
-                    info[item['Name']] = item.get('Value')
+            metadata_items = metadata.get('Item')
+            for item in metadata_items:
+                info[item['Name']] = item.get('Value')
         
         
         our_model = LNMOnline.objects.create(
