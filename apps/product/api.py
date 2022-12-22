@@ -64,7 +64,7 @@ def create_checkout_session(request):
         decrement_product_quantity(order)
         
         r = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
-        return JsonResponse(r, safe=False)
+        return JsonResponse(r)
         
         
         #send_order_confirmation(order)
