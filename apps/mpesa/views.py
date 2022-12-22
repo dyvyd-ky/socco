@@ -21,7 +21,7 @@ class ConfirmView(APIView):
 
     def post(self, request):
         # save the data
-        request_data = json.dumps(request.result)
+        request_data = json.dumps(request.r)
         request_data = json.loads(request_data)
         body = request_data.get('Body')
         resultcode = body.get('stkCallback').get('ResultCode')
