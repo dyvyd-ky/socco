@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from .models import PaymentTransaction
+from .models import LNMOnline
 
 
-class PaymentTransactionSerializer(serializers.ModelSerializer):
+class LNMOnlineSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PaymentTransaction
+        model = LNMOnline
         fields = ("id",)

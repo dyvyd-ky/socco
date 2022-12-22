@@ -1,67 +1,76 @@
-from __future__ import unicode_literals
-
 import json
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.views.generic import View
-#from .LipaNaMpesaOnline import sendSTK, check_payment_status
-from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from rest_framework.response import Response
-from .models import PaymentTransaction
-from django.http import JsonResponse
+from rest_framework.generics import CreateAPIView
+
 from rest_framework.permissions import AllowAny
-from .serializers import PaymentTransactionSerializer
 
-class ConfirmView(APIView):
-    queryset = PaymentTransaction.objects.all()
-    serializer_class = PaymentTransactionSerializer
-    permission_classes = [AllowAny, ]
+from .models import LNMOnline
+from .serializers import LNMOnlineSerializer
 
-    def post(self, request):
-        # save the data
+
+class LNMCallbackUrlAPIView(CreateAPIView):
+    queryset = LNMOnline.objects.all()
+    serializer_class = LNMOnlineSerializer
+    permission_classes = [AllowAny]
+
+    def create(self, request):
+        print(request.data, "this is request.data")
+
         request_data = json.dumps(request.body.decode())
         request_data = json.loads(request_data)
-        body = request_data.get('Body')
-        resultcode = body.get('stkCallback').get('ResultCode')
-        # Perform your processing here e.g. print it out...
-        if resultcode == 0:
-            print('Payment successful')
-            requestId = body.get('stkCallback').get('CheckoutRequestID')
-            metadata = body.get('stkCallback').get('CallbackMetadata').get('Item')
-            for data in metadata:
-                if data.get('Name') == "MpesaReceiptNumber":
-                    receipt_number = data.get('Value')
-            transaction = PaymentTransaction.objects.get(
-                checkout_request_id=requestId)
-            if transaction:
-                transaction.trans_id = receipt_number
-                transaction.is_finished = True
-                transaction.is_successful = True
-                transaction.save()
+        merchant_request_id = request_data["Body"]["stkCallback"]["MerchantRequestID"]
+        print(merchant_request_id, "this should be MerchantRequestID")
+        checkout_request_id = request_data["Body"]["stkCallback"]["CheckoutRequestID"]
+        result_code = request_data["Body"]["stkCallback"]["ResultCode"]
+        result_description = request_data["Body"]["stkCallback"]["ResultDesc"]
+        amount = request_data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][0][
+            "Value"
+        ]
+        print(amount, "this should be an amount")
+        mpesa_receipt_number = request_data["Body"]["stkCallback"]["CallbackMetadata"][
+            "Item"
+        ][1]["Value"]
+        print(mpesa_receipt_number, "this should be an mpesa_receipt_number")
 
-        else:
-            print('unsuccessfull')
-            requestId = body.get('stkCallback').get('CheckoutRequestID')
-            transaction = PaymentTransaction.objects.get(
-                checkout_request_id=requestId)
-            if transaction:
-                transaction.is_finished = True
-                transaction.is_successful = False
-                transaction.save()
+        transaction_date = request_data["Body"]["stkCallback"]["CallbackMetadata"][
+            "Item"
+        ][2]["Value"]
+        print(transaction_date, "this should be an transaction_date")
 
-        # Prepare the response, assuming no errors have occurred. Any response
-        # other than a 0 (zero) for the 'ResultCode' during Validation only means
-        # an error occurred and the transaction is cancelled
-        message = {
-            "ResultCode": 0,
-            "ResultDesc": "The service was accepted successfully",
-            "ThirdPartyTransID": "1237867865"
-        }
+        phone_number = request_data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][
+            3
+        ]["Value"]
+        print(phone_number, "this should be an phone_number")
 
-        # Send the response back to the server
-        return Response(message, status=HTTP_200_OK)
+        from datetime import datetime
 
-    def get(self, request):
-        return Response("Confirm callback", status=HTTP_200_OK)
+        str_transaction_date = str(transaction_date)
+        print(str_transaction_date, "this should be an str_transaction_date")
+
+        transaction_datetime = datetime.strptime(str_transaction_date, "%Y%m%d%H%M%S")
+        print(transaction_datetime, "this should be an transaction_datetime")
+
+        import pytz
+        aware_transaction_datetime = pytz.utc.localize(transaction_datetime)
+        print(aware_transaction_datetime, "this should be an aware_transaction_datetime")
+
+
+        from mpesa.models import LNMOnline
+
+        our_model = LNMOnline.objects.create(
+            CheckoutRequestID=checkout_request_id,
+            MerchantRequestID=merchant_request_id,
+            Amount=amount,
+            ResultCode=result_code,
+            ResultDesc=result_description,
+            MpesaReceiptNumber=mpesa_receipt_number,
+            TransactionDate=aware_transaction_datetime,
+            PhoneNumber=phone_number,
+        )
+
+        our_model.save()
+
+        from rest_framework.response import Response
+
+        return Response({"OurResultDesc": "..and it all worked out!"})
+
+
