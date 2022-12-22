@@ -27,7 +27,7 @@ class LNMCallbackUrlAPIView(CreateAPIView):
             metadata_items = metadata.get('Item')
             for item in metadata_items:
                 info[item['Name']] = item.get('Value')
-
+        
         
         our_model = LNMOnline.objects.create(
             CheckoutRequestID=info['CheckoutRequestID'],
