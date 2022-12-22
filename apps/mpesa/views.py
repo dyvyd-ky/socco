@@ -15,8 +15,8 @@ class LNMCallbackUrlAPIView(CreateAPIView):
     def create(self, request):
         print(request.data, "this is request.data")
 
-        request_data = json.dumps(request.body.decode())
-        request_data = json.loads(request_data)
+        request_data = json.loads(request.body.decode())
+        #request_data = json.loads(request_data)
         merchant_request_id = request_data["Body"]["stkCallback"]["MerchantRequestID"]
         print(merchant_request_id, "this should be MerchantRequestID")
         checkout_request_id = request_data["Body"]["stkCallback"]["CheckoutRequestID"]
