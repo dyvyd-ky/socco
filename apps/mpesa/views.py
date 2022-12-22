@@ -18,28 +18,22 @@ class LNMCallbackUrlAPIView(CreateAPIView):
         request_data = request.data
         print(request_data)
         merchant_request_id = request_data["Body"]["stkCallback"]["MerchantRequestID"]
-        print(merchant_request_id, "this should be MerchantRequestID")
         checkout_request_id = request_data["Body"]["stkCallback"]["CheckoutRequestID"]
         result_code = request_data["Body"]["stkCallback"]["ResultCode"]
         result_description = request_data["Body"]["stkCallback"]["ResultDesc"]
         amount = request_data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][0][
             "Value"
         ]
-        print(amount, "this should be an amount")
         mpesa_receipt_number = request_data["Body"]["stkCallback"]["CallbackMetadata"][
             "Item"
         ][1]["Value"]
-        print(mpesa_receipt_number, "this should be an mpesa_receipt_number")
-
         transaction_date = request_data["Body"]["stkCallback"]["CallbackMetadata"][
             "Item"
         ][2]["Value"]
-        print(transaction_date, "this should be an transaction_date")
 
         phone_number = request_data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][
             3
         ]["Value"]
-        print(phone_number, "this should be an phone_number")
 
         from datetime import datetime
 
