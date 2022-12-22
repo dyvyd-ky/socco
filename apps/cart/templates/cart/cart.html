@@ -215,7 +215,9 @@
                             credentials: 'same-origin',
                             body: JSON.stringify(data)
                         })
-                        
+                        .then(function(response) {
+                            return response.json()
+                        })
                         
                         
                     } 
