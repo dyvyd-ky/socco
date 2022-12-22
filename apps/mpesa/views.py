@@ -54,8 +54,6 @@ class LNMCallbackUrlAPIView(CreateAPIView):
         print(aware_transaction_datetime, "this should be an aware_transaction_datetime")
 
 
-        from mpesa.models import LNMOnline
-
         our_model = LNMOnline.objects.create(
             CheckoutRequestID=checkout_request_id,
             MerchantRequestID=merchant_request_id,
