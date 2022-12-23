@@ -75,5 +75,5 @@ class ConfirmView(APIView):
         # Send the response back to the server
         return Response(message, status=HTTP_200_OK)
 
-    '''def get(self, request):
-        return Response("Confirm callback", status=HTTP_200_OK)'''
+    def get(self, request):
+        return Response("Confirm callback", status=HTTP_200_OK)
