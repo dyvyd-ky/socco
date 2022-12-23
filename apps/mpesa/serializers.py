@@ -7,4 +7,4 @@ class LNMOnlineSerializer(serializers.ModelSerializer):
     metadata = serializers.JSONField(allow_null=True)
     class Meta:
         model = LNMOnline
-        fields = ("id",)
+        fields = ('id','metadata',)
