@@ -7,7 +7,7 @@ from django.conf import settings
 import uuid
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 
 class AccessToken(models.Model):
 	token = models.CharField(max_length=30)
