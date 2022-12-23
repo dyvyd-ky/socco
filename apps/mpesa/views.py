@@ -28,7 +28,7 @@ class ConfirmView(APIView):
         #request_data = json.loads(request_data)
         body = request_data.get('Body')
         resultcode = body.get('stkCallback').get('ResultCode')
-        result_desc = body.get('stkCallback').get('ResultDesc')
+        
         # Perform your processing here e.g. print it out...
         if resultcode == 0:
             print('Payment successful')
@@ -51,17 +51,11 @@ class ConfirmView(APIView):
                 Amount=amount,
                 TransactionDate=trans_date,
                 PhoneNumber=phone_number,
-                ResultDesc=result_desc,
                 )
             transaction.save()
 
         else:
             print('unsuccessfull')
-            transaction = PaymentTransaction.objects.create(
-                ResultDesc=result_desc,
-                ResultCode=resultcode,
-                )
-            transaction.save()
 
         # Prepare the response, assuming no errors have occurred. Any response
         # other than a 0 (zero) for the 'ResultCode' during Validation only means
