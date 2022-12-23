@@ -4,7 +4,4 @@ from django.contrib import admin
 from .models import LNMOnline
 
 
-class LNMOnlineAdmin(admin.ModelAdmin):
-    list_display = ("PhoneNumber", "Amount", "MpesaReceiptNumber", "TransactionDate")
-
-admin.site.register(LNMOnline,LNMOnlineAdmin)
+admin.site.register(LNMOnline)

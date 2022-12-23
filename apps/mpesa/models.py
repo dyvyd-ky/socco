@@ -7,7 +7,7 @@ from django.conf import settings
 import uuid
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-
+from django.contrib.postgres.fields import JSONField
 
 class AccessToken(models.Model):
 	token = models.CharField(max_length=30)
@@ -25,11 +25,7 @@ class LNMOnline(models.Model):
     MerchantRequestID = models.CharField(max_length=20, blank=True, null=True)
     ResultCode = models.IntegerField(blank=True, null=True)
     ResultDesc = models.CharField(max_length=120, blank=True, null=True)
-    Amount = models.FloatField(blank=True, null=True)
-    MpesaReceiptNumber = models.CharField(max_length=15, blank=True, null=True)
-    Balance = models.CharField(max_length=12, blank=True, null=True)
-    TransactionDate = models.DateTimeField(blank=True, null=True)
-    PhoneNumber = models.CharField(max_length=13, blank=True, null=True)
+    metadata = JSONField(default=dict)
 
-    def __str__(self):
-        return f"{self.PhoneNumber} has sent {self.Amount} >> {self.MpesaReceiptNumber}"
+    '''def __str__(self):
+        return f"{self.PhoneNumber} has sent {self.Amount} >> {self.MpesaReceiptNumber}"'''
