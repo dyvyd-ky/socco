@@ -1,11 +1,9 @@
-'''from rest_framework import serializers
+from rest_framework import serializers
 
-from .models import LNMOnline
+from .models import PaymentTransaction
 
 
-class LNMOnlineSerializer(serializers.ModelSerializer):
-    metadata = serializers.JSONField(allow_null=True)
+class PaymentTransactionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LNMOnline
-        fields = ('id','metadata',)
-'''
+        model = PaymentTransaction
+        fields = ('id',)

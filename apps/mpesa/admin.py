@@ -10,8 +10,7 @@ from .models import PaymentTransaction
 # Register your models here.
 
 class PaymentTransactionAdmin(admin.ModelAdmin):
-    list_display = ("phone_number", "amount", "is_finished",
-                    "is_successful", "trans_id", 'date_created', 'date_modified')
+    list_display = ("PhoneNumber", "Amount", "MpesaReceiptNumber", "TransactionDate", "ResultDesc")
 
 
 admin.site.register(PaymentTransaction, PaymentTransactionAdmin)
