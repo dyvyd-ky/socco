@@ -62,9 +62,13 @@ class ConfirmView(APIView):
         # Prepare the response, assuming no errors have occurred. Any response
         # other than a 0 (zero) for the 'ResultCode' during Validation only means
         # an error occurred and the transaction is cancelled
-
+        message = {
+            "ResultCode": 0,
+            "ResultDesc": "The service was accepted successfully",
+            "ThirdPartyTransID": "1237867865"
+        }
         # Send the response back to the server
-        return Response({"message": "checkout"})
+        return Response(message, status=HTTP_200_OK)
 
     def get(self, request):
-        return Response("Confirm callback")
+        return Response("Confirm callback", status=HTTP_200_OK)
