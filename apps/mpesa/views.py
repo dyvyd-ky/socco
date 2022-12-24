@@ -14,8 +14,10 @@ from .models import PaymentTransaction
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
 from .serializers import PaymentTransactionSerializer
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 class ConfirmView(APIView):
     queryset = PaymentTransaction.objects.all()
     serializer_class = PaymentTransactionSerializer
