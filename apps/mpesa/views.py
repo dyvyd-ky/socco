@@ -58,6 +58,11 @@ class ConfirmView(APIView):
 
         else:
             print('unsuccessfull')
+            desc = body.get('stkCallback').get('ResultDesc')
+            transaction = PaymentTransaction.objects.create(
+                ResultDesc=desc,
+            )
+            transaction.save()
 
         # Prepare the response, assuming no errors have occurred. Any response
         # other than a 0 (zero) for the 'ResultCode' during Validation only means

@@ -9,8 +9,8 @@ from .models import PaymentTransaction
 
 # Register your models here.
 
-'''class PaymentTransactionAdmin(admin.ModelAdmin):
+class PaymentTransactionAdmin(admin.ModelAdmin):
     list_display = ("PhoneNumber", "Amount", "MpesaReceiptNumber", "TransactionDate", "ResultDesc")
-'''
 
-admin.site.register(PaymentTransaction)
+
+admin.site.register(PaymentTransaction, PaymentTransactionAdmin)
