@@ -34,6 +34,7 @@ class ConfirmView(APIView):
             print('Payment successful')
             requestId = body.get('stkCallback').get('CheckoutRequestID')
             merchantId = body.get('stkCallback').get('MerchantRequestID')
+            desc = body.get('stkCallback').get('ResultDesc')
             metadata = body.get('stkCallback').get('CallbackMetadata').get('Item')
             for data in metadata:
                 if data.get('Name') == "MpesaReceiptNumber":
@@ -47,6 +48,7 @@ class ConfirmView(APIView):
             transaction = PaymentTransaction.objects.create(
                 CheckoutRequestID=requestId,
                 MerchantRequestID=merchantId,
+                ResultDesc=desc,
                 MpesaReceiptNumber=receipt_number,
                 Amount=amount,
                 TransactionDate=trans_date,
@@ -60,14 +62,9 @@ class ConfirmView(APIView):
         # Prepare the response, assuming no errors have occurred. Any response
         # other than a 0 (zero) for the 'ResultCode' during Validation only means
         # an error occurred and the transaction is cancelled
-        message = {
-            "ResultCode": 0,
-            "ResultDesc": "The service was accepted successfully",
-            "ThirdPartyTransID": "1237867865"
-        }
 
         # Send the response back to the server
-        return Response(message, status=HTTP_200_OK)
+        return Response({"message": "checkout"})
 
     def get(self, request):
-        return Response("Confirm callback", status=HTTP_200_OK)
+        return Response("Confirm callback")
